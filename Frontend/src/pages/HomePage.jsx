@@ -1,30 +1,30 @@
-// src/pages/HomePage.jsx
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import CoreFeatures from "../components/Corefeatures";
+import { useState } from "react";
 
 const HomePage = () => {
+  const [destination, setDestination] = useState("");
+  const [dates, setDates] = useState({ checkIn: "", checkOut: "" });
+  const [guests, setGuests] = useState(2);
+
+  const navigate = useNavigate();
+
   const destinations = [
-    {
-      name: "Mumbai",
-      image: "/Mumbai.jpg", // Gateway of India
-      slug: "mumbai",
-    },
-    {
-      name: "Delhi",
-      image: "/Delhi.jpg", // Lotus Temple
-      slug: "delhi",
-    },
-    {
-      name: "Hyderabad",
-      image: "/Hyderabad.jpg", // Charminar
-      slug: "hyderabad",
-    },
-    {
-      name: "Bangalore",
-      image: "/Bangalore.jpg", // Vidhana Soudha
-      slug: "bangalore",
-    },
+    { name: "Mumbai", image: "/Mumbai.jpg", slug: "mumbai" },
+    { name: "Delhi", image: "/Delhi.jpg", slug: "delhi" },
+    { name: "Hyderabad", image: "/Hyderabad.jpg", slug: "hyderabad" },
+    { name: "Bangalore", image: "/Bangalore.jpg", slug: "bangalore" },
   ];
+
+  const handleSearch = (e) => {
+    e.preventDefault();
+    if (!destination) {
+      alert("Please select a destination");
+      return;
+    }
+    // Redirect to city page — in future, you can pass dates/guests as query params
+    navigate(`/cities/${destination}`);
+  };
 
   return (
     <div className="bg-white">
@@ -43,12 +43,106 @@ const HomePage = () => {
           <p className="text-xl md:text-2xl mb-8">
             Smart. Simple. Secure hotel bookings.
           </p>
-          {/* <Link
-            to="/search"
-            className="px-8 py-3 bg-red-500 hover:bg-red-600 text-white font-semibold rounded-lg shadow-lg transition transform hover:scale-105"
-          >
-            Start Booking Now
-          </Link> */}
+        </div>
+      </section>
+
+      <section className="max-w-6xl mx-auto px-4 -mt-6 md:-mt-8 relative z-20">
+        <div className="bg-white rounded-xl shadow-lg p-4 md:p-6">
+          {(() => {
+            const today = new Date();
+            const maxDate = new Date();
+            maxDate.setDate(today.getDate() + 30);
+            const todayStr = today.toISOString().split("T")[0];
+            const maxDateStr = maxDate.toISOString().split("T")[0];
+
+            return (
+              <form
+                onSubmit={handleSearch}
+                className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-5 gap-3"
+              >
+                {/* Destination */}
+                <div>
+                  <label className="text-xs text-gray-500 block mb-1">
+                    Destination
+                  </label>
+                  <select
+                    value={destination}
+                    onChange={(e) => setDestination(e.target.value)}
+                    className="w-full px-3 py-2 border border-gray-300 rounded focus:outline-none focus:ring-2 focus:ring-[#2f7003]"
+                  >
+                    <option value="">Select Destination</option>
+                    {destinations.map((d) => (
+                      <option key={d.slug} value={d.slug}>
+                        {d.name}
+                      </option>
+                    ))}
+                  </select>
+                </div>
+
+                {/* Check-in */}
+                <div>
+                  <label className="text-xs text-gray-500 block mb-1">
+                    Check-in
+                  </label>
+                  <input
+                    type="date"
+                    value={dates.checkIn}
+                    onChange={(e) =>
+                      setDates({ ...dates, checkIn: e.target.value })
+                    }
+                    min={todayStr}
+                    max={maxDateStr}
+                    className="w-full px-3 py-2 border border-gray-300 rounded focus:outline-none focus:ring-2 focus:ring-[#2f7003]"
+                  />
+                </div>
+
+                {/* Check-out */}
+                <div>
+                  <label className="text-xs text-gray-500 block mb-1">
+                    Check-out
+                  </label>
+                  <input
+                    type="date"
+                    value={dates.checkOut}
+                    onChange={(e) =>
+                      setDates({ ...dates, checkOut: e.target.value })
+                    }
+                    min={dates.checkIn || todayStr}
+                    max={maxDateStr}
+                    className="w-full px-3 py-2 border border-gray-300 rounded focus:outline-none focus:ring-2 focus:ring-[#2f7003]"
+                  />
+                </div>
+
+                {/* Guests */}
+                <div>
+                  <label className="text-xs text-gray-500 block mb-1">
+                    Guests
+                  </label>
+                  <select
+                    value={guests}
+                    onChange={(e) => setGuests(Number(e.target.value))}
+                    className="w-full px-3 py-2 border border-gray-300 rounded focus:outline-none focus:ring-2 focus:ring-[#2f7003]"
+                  >
+                    {[1, 2, 3, 4, 5, 6].map((num) => (
+                      <option key={num} value={num}>
+                        {num} {num === 1 ? "Guest" : "Guests"}
+                      </option>
+                    ))}
+                  </select>
+                </div>
+
+                {/* Search Button */}
+                <div className="flex items-end">
+                  <button
+                    type="submit"
+                    className="w-full bg-[#2f7003] hover:bg-[#255a02] text-white font-medium py-2 rounded transition-colors"
+                  >
+                    Search
+                  </button>
+                </div>
+              </form>
+            );
+          })()}
         </div>
       </section>
 

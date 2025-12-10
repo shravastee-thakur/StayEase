@@ -9,7 +9,7 @@ dotenv.config();
 import { errorHandler } from "./middlewares/errorMiddleware.js";
 
 import userRoute from "./routes/UserRoutes.js";
-// import hotelRoute from "./routes/HotelRoutes.js";
+import hotelRoute from "./routes/HotelRoutes.js";
 
 const app = express();
 connectdb();
@@ -36,7 +36,7 @@ app.use(
 app.use("/api/v1/user", userRoute);
 // http://localhost:8000/api/v1/user/register
 
-// app.use("/api/v1/hotel", hotelRoute);
+app.use("/api/v1/hotel", hotelRoute);
 // http://localhost:8000/api/v1/hotel/createHotel
 
 app.use((req, res, next) => {

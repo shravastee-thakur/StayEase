@@ -7,7 +7,6 @@ const AdminHotels = () => {
     {
       id: 1,
       name: "Grand Mumbai Palace",
-      type: "Hotel",
       city: "Mumbai",
       address: "Marine Drive, Mumbai",
       distance: "2.5 km from center",

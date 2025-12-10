@@ -7,12 +7,10 @@ const roomSchema = new mongoose.Schema(
       ref: "Hotel",
       required: true,
     },
-    image: [
-      {
-        url: { type: String },
-        public_id: { type: String },
-      },
-    ],
+    image: {
+      url: { type: String },
+      public_id: { type: String },
+    },
     type: {
       type: String,
       required: true,
