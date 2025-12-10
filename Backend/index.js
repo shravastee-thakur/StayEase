@@ -6,9 +6,9 @@ import connectdb from "./config/connectdb.js";
 import dotenv from "dotenv";
 import logger from "./utils/logger.js";
 dotenv.config();
-// import { errorHandler } from "./middlewares/errorMiddleware.js";
+import { errorHandler } from "./middlewares/errorMiddleware.js";
 
-// import userRoute from "./routes/UserRoutes.js";
+import userRoute from "./routes/UserRoutes.js";
 // import hotelRoute from "./routes/HotelRoutes.js";
 
 const app = express();
@@ -33,8 +33,9 @@ app.use(
 );
 
 // Routes
-// app.use("/api/v1/user", userRoute);
+app.use("/api/v1/user", userRoute);
 // http://localhost:8000/api/v1/user/register
+
 // app.use("/api/v1/hotel", hotelRoute);
 // http://localhost:8000/api/v1/hotel/createHotel
 
