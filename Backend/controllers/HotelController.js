@@ -5,9 +5,11 @@ import Room from "../models/RoomModel.js";
 import logger from "../utils/logger.js";
 
 export const createHotel = async (req, res, next) => {
+  console.log(req.body);
+
   try {
-    const { name, city, address, distance, image, desc } = req.body;
-    if (!name || !city || !address || !distance || !desc) {
+    const { name, city, address, distance, description } = req.body;
+    if (!name || !city || !address || !distance || !description) {
       return res
         .status(400)
         .json({ success: false, message: "Some fields are not filled" });
@@ -31,8 +33,7 @@ export const createHotel = async (req, res, next) => {
         url: uploadImage.secure_url,
         public_id: uploadImage.public_id,
       },
-
-      desc,
+      description,
     });
     return res.status(201).json({
       success: true,
@@ -118,7 +119,7 @@ export const updateHotel = async (req, res, next) => {
         address: req.body.address || hotel.address,
         distance: req.body.distance || hotel.distance,
         image: updatedImage,
-        desc: req.body.desc || hotel.desc,
+        description: req.body.description || hotel.description,
       },
       { new: true }
     );

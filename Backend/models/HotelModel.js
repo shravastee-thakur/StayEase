@@ -23,7 +23,7 @@ const hotelSchema = new mongoose.Schema(
       public_id: { type: String },
     },
 
-    desc: {
+    description: {
       type: String,
       required: true,
     },

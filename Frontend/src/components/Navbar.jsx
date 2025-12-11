@@ -7,8 +7,6 @@ const Navbar = () => {
   const { verified, logout, role } = useContext(AuthContext);
   const [isMenuOpen, setIsMenuOpen] = useState(false);
 
-  console.log(role);
-
   const handleLogout = async () => {
     const success = await logout();
 

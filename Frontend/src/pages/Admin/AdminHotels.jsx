@@ -1,49 +1,33 @@
-// src/pages/AdminHotels.jsx
-import React, { useState, useRef } from "react";
+import axios from "axios";
+import { useState, useContext, useEffect } from "react";
+import { HotelContext } from "../../context/HotelProvider";
 
 const AdminHotels = () => {
-  // Mock hotel data (replace with API call in real app)
-  const [hotels, setHotels] = useState([
-    {
-      id: 1,
-      name: "Grand Mumbai Palace",
-      city: "Mumbai",
-      address: "Marine Drive, Mumbai",
-      distance: "2.5 km from center",
-      description: "Luxury beachfront hotel with panoramic views.",
-      cheapestPrice: 120,
-      featured: false,
-      photos: ["/placeholder.jpg"],
-    },
-  ]);
+  const { createHotel, deleteHotel } = useContext(HotelContext);
 
+  const [hotels, setHotels] = useState([]);
   const [isModalOpen, setIsModalOpen] = useState(false);
-  const [currentHotel, setCurrentHotel] = useState(null); // null = create mode, object = edit mode
+  const [currentHotel, setCurrentHotel] = useState(null);
   const [formData, setFormData] = useState({
     name: "",
-    type: "",
     city: "",
     address: "",
     distance: "",
     description: "",
-    cheapestPrice: "",
   });
-  const [photos, setPhotos] = useState([]);
-  const fileInputRef = useRef(null);
+  const [image, setImage] = useState(null);
 
   // Open modal for CREATE
   const openCreateModal = () => {
     setCurrentHotel(null);
     setFormData({
       name: "",
-      type: "",
       city: "",
       address: "",
       distance: "",
       description: "",
-      cheapestPrice: "",
     });
-    setPhotos([]);
+    setImage(null);
     setIsModalOpen(true);
   };
 
@@ -52,63 +36,114 @@ const AdminHotels = () => {
     setCurrentHotel(hotel);
     setFormData({
       name: hotel.name,
-      type: hotel.type,
       city: hotel.city,
       address: hotel.address,
       distance: hotel.distance,
       description: hotel.description,
-      cheapestPrice: hotel.cheapestPrice.toString(),
     });
-    setPhotos(hotel.photos || []);
+    setImage(null);
     setIsModalOpen(true);
   };
 
-  // Handle form input changes
+  useEffect(() => {
+    const fetchHotels = async () => {
+      try {
+        const res = await axios.get(
+          "http://localhost:8000/api/v1/hotel/getHotels",
+          {
+            headers: {
+              "Content-Type": "application/json",
+            },
+            withCredentials: true,
+          }
+        );
+        console.log(res.data);
+
+        if (res.data.success) {
+          setHotels(res.data.hotels);
+        }
+      } catch (error) {
+        console.log(error);
+      }
+    };
+
+    fetchHotels();
+  }, []);
+
   const handleInputChange = (e) => {
     const { name, value } = e.target;
     setFormData((prev) => ({ ...prev, [name]: value }));
   };
 
-  // Handle image upload (simulated dropzone)
-  const handleImageUpload = (e) => {
-    const files = Array.from(e.target.files);
-    const newPhotoUrls = files.map((file) => URL.createObjectURL(file));
-    setPhotos((prev) => [...prev, ...newPhotoUrls]);
-  };
-
-  // Remove an image
-  const removeImage = (index) => {
-    setPhotos((prev) => prev.filter((_, i) => i !== index));
-  };
-
-  // Save hotel (create or update)
-  const handleSave = () => {
-    if (currentHotel) {
-      // Update
-      setHotels((prev) =>
-        prev.map((h) =>
-          h.id === currentHotel.id
-            ? { ...currentHotel, ...formData, photos }
-            : h
-        )
-      );
-    } else {
-      // Create
-      const newHotel = {
-        id: Date.now(),
-        ...formData,
-        cheapestPrice: Number(formData.cheapestPrice),
-        photos,
-      };
-      setHotels((prev) => [...prev, newHotel]);
+  // Handle file selection via input
+  const handleFileInputChange = (e) => {
+    if (e.target.files && e.target.files[0]) {
+      setImage(e.target.files[0]);
     }
-    setIsModalOpen(false);
   };
 
-  // Delete hotel
-  const handleDelete = (id) => {
-    if (window.confirm("Are you sure you want to delete this hotel?")) {
-      setHotels((prev) => prev.filter((h) => h.id !== id));
+  // Handle drag and drop
+  const handleDrop = (e) => {
+    e.preventDefault();
+    if (e.dataTransfer.files && e.dataTransfer.files[0]) {
+      const file = e.dataTransfer.files[0];
+      if (file.type.startsWith("image/")) {
+        setImage(file);
+      } else {
+        alert("Please upload an image file.");
+      }
+    }
+  };
+
+  const handleDragOver = (e) => {
+    e.preventDefault();
+  };
+
+  // Save hotel
+  const handleSave = async (e) => {
+    e.preventDefault();
+
+    const data = new FormData();
+    data.append("name", formData.name);
+    data.append("city", formData.city);
+    data.append("address", formData.address);
+    data.append("distance", formData.distance);
+    data.append("description", formData.description);
+
+    if (image) {
+      data.append("image", image);
+    } else if (!currentHotel) {
+      alert("Please upload an image.");
+      return;
+    }
+
+    if (currentHotel) {
+      // In a real app, you'd call an update API here
+      // For now, just close modal
+      setIsModalOpen(false);
+    } else {
+      try {
+        await createHotel(data);
+        setIsModalOpen(false);
+        setFormData({
+          name: "",
+          city: "",
+          address: "",
+          distance: "",
+          description: "",
+        });
+        setImage(null);
+      } catch (error) {
+        console.error("Error creating hotel:", error);
+        alert("Failed to create hotel.");
+      }
+    }
+  };
+
+  const handleDelete = async (id) => {
+    const success = await deleteHotel(id);
+    if (success) {
+      setHotels((prev) => prev.filter((h) => h._id !== id));
     }
   };
 
@@ -128,23 +163,19 @@ const AdminHotels = () => {
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
         {hotels.map((hotel) => (
           <div
-            key={hotel.id}
+            key={hotel._id}
             className="bg-white rounded-lg shadow-md overflow-hidden border border-gray-200"
           >
-            {hotel.photos[0] && (
-              <img
-                src={hotel.photos[0]}
-                alt={hotel.name}
-                className="w-full h-48 object-cover"
-              />
-            )}
+            <img
+              src={hotel.image?.url}
+              alt={hotel.name}
+              className="w-full h-48 object-cover"
+            />
+
             <div className="p-4">
               <h3 className="font-bold text-lg text-gray-800">{hotel.name}</h3>
-              <p className="text-sm text-gray-600">{hotel.city}</p>
-              <p className="text-sm text-gray-500 mt-1">{hotel.type}</p>
-              <p className="text-green-600 font-semibold mt-2">
-                ₹{hotel.cheapestPrice}/night
-              </p>
+              <p className="text-sm font-semibold text-green-700">{hotel.city}</p>
+              <p className="text-sm text-gray-500 mt-1">{hotel.address}</p>
               <div className="flex justify-end space-x-2 mt-3">
                 <button
                   onClick={() => openEditModal(hotel)}
@@ -153,7 +184,7 @@ const AdminHotels = () => {
                   Edit
                 </button>
                 <button
-                  onClick={() => handleDelete(hotel.id)}
+                  onClick={() => handleDelete(hotel._id)}
                   className="px-3 py-1 bg-red-500 text-white text-sm rounded hover:bg-red-600"
                 >
                   Delete
@@ -173,22 +204,12 @@ const AdminHotels = () => {
                 {currentHotel ? "Edit Hotel" : "Add New Hotel"}
               </h2>
 
-              {/* Form */}
-              <div className="space-y-4">
+              <form onSubmit={handleSave} className="space-y-4">
                 <input
                   type="text"
                   name="name"
                   placeholder="Hotel Name"
                   value={formData.name}
-                  onChange={handleInputChange}
-                  className="w-full p-2 border border-gray-300 rounded"
-                  required
-                />
-                <input
-                  type="text"
-                  name="type"
-                  placeholder="Type (e.g., Hotel, Resort)"
-                  value={formData.type}
                   onChange={handleInputChange}
                   className="w-full p-2 border border-gray-300 rounded"
                   required
@@ -227,70 +248,44 @@ const AdminHotels = () => {
                   className="w-full p-2 border border-gray-300 rounded"
                   rows="3"
                 />
-                <input
-                  type="number"
-                  name="cheapestPrice"
-                  placeholder="Cheapest Price (₹)"
-                  value={formData.cheapestPrice}
-                  onChange={handleInputChange}
-                  className="w-full p-2 border border-gray-300 rounded"
-                  min="0"
-                  required
-                />
 
-                {/* Image Dropzone */}
-                <div className="border-2 border-dashed border-gray-300 rounded-lg p-4">
-                  <p className="text-gray-600 mb-2">Upload Photos</p>
+                {/* Single Image Dropzone - No Preview */}
+                <div
+                  className="border-2 border-dashed border-gray-300 rounded-lg p-6 text-center cursor-pointer bg-gray-50"
+                  onDrop={handleDrop}
+                  onDragOver={handleDragOver}
+                  onClick={() => document.getElementById("file-input").click()}
+                >
+                  <p className="text-gray-600">
+                    {image
+                      ? `Selected: ${image.name}`
+                      : "Drag & drop an image here, or click to upload (single image only)"}
+                  </p>
+                  <input
+                    id="file-input"
+                    type="file"
+                    className="hidden"
+                    accept="image/*"
+                    onChange={handleFileInputChange}
+                  />
+                </div>
+
+                <div className="flex justify-end space-x-3 mt-6">
                   <button
                     type="button"
-                    onClick={() => fileInputRef.current?.click()}
-                    className="text-blue-600 hover:underline"
+                    onClick={() => setIsModalOpen(false)}
+                    className="px-4 py-2 border border-gray-300 rounded text-gray-700 hover:bg-gray-100"
                   >
-                    Click to upload or drag and drop
+                    Cancel
                   </button>
-                  <input
-                    type="file"
-                    ref={fileInputRef}
-                    onChange={handleImageUpload}
-                    multiple
-                    accept="image/*"
-                    className="hidden"
-                  />
-                  <div className="mt-3 flex flex-wrap gap-2">
-                    {photos.map((url, index) => (
-                      <div key={index} className="relative">
-                        <img
-                          src={url}
-                          alt={`preview-${index}`}
-                          className="w-16 h-16 object-cover rounded"
-                        />
-                        <button
-                          type="button"
-                          onClick={() => removeImage(index)}
-                          className="absolute -top-2 -right-2 bg-red-500 text-white rounded-full w-5 h-5 flex items-center justify-center text-xs"
-                        >
-                          ×
-                        </button>
-                      </div>
-                    ))}
-                  </div>
+                  <button
+                    type="submit"
+                    className="px-4 py-2 bg-blue-600 text-white rounded hover:bg-blue-700"
+                  >
+                    Save Hotel
+                  </button>
                 </div>
-              </div>
-
-              <div className="flex justify-end space-x-3 mt-6">
-                <button
-                  onClick={() => setIsModalOpen(false)}
-                  className="px-4 py-2 border border-gray-300 rounded text-gray-700 hover:bg-gray-100"
-                >
-                  Cancel
-                </button>
-                <button
-                  onClick={handleSave}
-                  className="px-4 py-2 bg-blue-600 text-white rounded hover:bg-blue-700"
-                >
-                  Save Hotel
-                </button>
-              </div>
+              </form>
             </div>
           </div>
         </div>

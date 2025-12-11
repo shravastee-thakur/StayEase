@@ -24,6 +24,7 @@ const AuthProvider = ({ children }) => {
           setAccessToken(res.data.accessToken);
           setVerified(res.data.user.verified);
           setUserId(res.data.user.id);
+          setRole(res.data.user.role);
         }
       } catch (error) {
         if (error.response && error.response.status === 401) {
