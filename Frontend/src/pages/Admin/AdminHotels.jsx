@@ -1,9 +1,12 @@
-import axios from "axios";
 import { useState, useContext, useEffect } from "react";
 import { HotelContext } from "../../context/HotelProvider";
+import { AuthContext } from "../../context/AuthProvider";
+import axios from "axios";
+import toast from "react-hot-toast";
 
 const AdminHotels = () => {
-  const { createHotel, deleteHotel } = useContext(HotelContext);
+  const { createHotel, fetchHotels, deleteHotel } = useContext(HotelContext);
+  const { accessToken } = useContext(AuthContext);
 
   const [hotels, setHotels] = useState([]);
   const [isModalOpen, setIsModalOpen] = useState(false);
@@ -46,28 +49,12 @@ const AdminHotels = () => {
   };
 
   useEffect(() => {
-    const fetchHotels = async () => {
-      try {
-        const res = await axios.get(
-          "http://localhost:8000/api/v1/hotel/getHotels",
-          {
-            headers: {
-              "Content-Type": "application/json",
-            },
-            withCredentials: true,
-          }
-        );
-        console.log(res.data);
-
-        if (res.data.success) {
-          setHotels(res.data.hotels);
-        }
-      } catch (error) {
-        console.log(error);
-      }
+    const loadHotels = async () => {
+      const hotelData = await fetchHotels();
+      setHotels(hotelData);
     };
 
-    fetchHotels();
+    loadHotels();
   }, []);
 
   const handleInputChange = (e) => {
@@ -118,8 +105,28 @@ const AdminHotels = () => {
     }
 
     if (currentHotel) {
-      // In a real app, you'd call an update API here
-      // For now, just close modal
+      try {
+        await axios.put(
+          `http://localhost:8000/api/v1/hotel/updateHotel/${currentHotel._id}`,
+          data,
+          {
+            headers: {
+              Authorization: `Bearer ${accessToken}`,
+              "Content-Type": "multipart/form-data",
+            },
+            withCredentials: true,
+          }
+        );
+      } catch (error) {
+        console.log(error);
+        toast.error("Failed to update hotel", {
+          style: {
+            borderRadius: "10px",
+            background: "#333",
+            color: "#fff",
+          },
+        });
+      }
       setIsModalOpen(false);
     } else {
       try {
@@ -174,7 +181,9 @@ const AdminHotels = () => {
 
             <div className="p-4">
               <h3 className="font-bold text-lg text-gray-800">{hotel.name}</h3>
-              <p className="text-sm font-semibold text-green-700">{hotel.city}</p>
+              <p className="text-sm font-semibold text-green-700">
+                {hotel.city}
+              </p>
               <p className="text-sm text-gray-500 mt-1">{hotel.address}</p>
               <div className="flex justify-end space-x-2 mt-3">
                 <button

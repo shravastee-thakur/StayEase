@@ -45,6 +45,30 @@ const HotelProvider = ({ children }) => {
     }
   };
 
+  const fetchHotels = async () => {
+    try {
+      const res = await axios.get(
+        "http://localhost:8000/api/v1/hotel/getHotels",
+        {
+          headers: {
+            "Content-Type": "application/json",
+          },
+          withCredentials: true,
+        }
+      );
+
+      if (res.data.success) {
+        return res.data.hotels;
+      }
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
+  // const updateHotel = async (id) => {
+    
+  // };
+
   const deleteHotel = async (id) => {
     console.log(id);
 
@@ -81,7 +105,7 @@ const HotelProvider = ({ children }) => {
   };
 
   return (
-    <HotelContext.Provider value={{ createHotel, deleteHotel }}>
+    <HotelContext.Provider value={{ createHotel, fetchHotels, deleteHotel }}>
       {children}
     </HotelContext.Provider>
   );

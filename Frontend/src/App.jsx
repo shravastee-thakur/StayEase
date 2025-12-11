@@ -10,6 +10,7 @@ import Forgetpassword from "./pages/user/ForgetPassword";
 import ResetPassword from "./pages/user/ResetPassword";
 import { Toaster } from "react-hot-toast";
 import Admin from "./pages/Admin/Admin";
+// import CityPage from "./pages/CityPage";
 
 const App = () => {
   return (
@@ -22,7 +23,6 @@ const App = () => {
         <Routes>
           <Route path="/" element={<HomePage />} />
           <Route path="/cities/:city" element={<CityHotelsPage />} />
-          {/* <Route path="/search" element={<SearchPage />} /> */}
           <Route path="/register" element={<Register />} />
           <Route path="/login" element={<Login />} />
           <Route path="/verify-login" element={<VerifyLogin />} />

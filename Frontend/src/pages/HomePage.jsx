@@ -10,10 +10,10 @@ const HomePage = () => {
   const navigate = useNavigate();
 
   const destinations = [
-    { name: "Mumbai", image: "/Mumbai.jpg", slug: "mumbai" },
-    { name: "Delhi", image: "/Delhi.jpg", slug: "delhi" },
-    { name: "Hyderabad", image: "/Hyderabad.jpg", slug: "hyderabad" },
-    { name: "Bangalore", image: "/Bangalore.jpg", slug: "bangalore" },
+    { name: "Mumbai", image: "/Mumbai.jpg", slug: "Mumbai" },
+    { name: "Delhi", image: "/Delhi.jpg", slug: "Delhi" },
+    { name: "Hyderabad", image: "/Hyderabad.jpg", slug: "Hyderabad" },
+    { name: "Bangalore", image: "/Bangalore.jpg", slug: "Bangalore" },
   ];
 
   const handleSearch = (e) => {
@@ -22,8 +22,18 @@ const HomePage = () => {
       alert("Please select a destination");
       return;
     }
-    // Redirect to city page — in future, you can pass dates/guests as query params
-    navigate(`/cities/${destination}`);
+
+    const queryParams = new URLSearchParams({
+      checkIn: dates.checkIn,
+      checkOut: dates.checkOut,
+      guests: guests.toString(),
+    }).toString();
+
+    navigate(`/cities/${destination}?${queryParams}`);
+  };
+
+  const handleFeaturedDestination = (citySlug) => {
+    navigate(`/cities/${citySlug}`);
   };
 
   return (
@@ -156,9 +166,9 @@ const HomePage = () => {
 
         <section className="px-10 sm:px-20 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8">
           {destinations.map((city) => (
-            <Link
+            <div
               key={city.slug}
-              to={`/cities/${city.slug}`}
+              onClick={() => handleFeaturedDestination(city.slug)}
               className="h-[300px] w-full overflow-hidden relative rounded-lg shadow-md group transition-transform duration-300 hover:scale-105"
             >
               <img
@@ -176,7 +186,7 @@ const HomePage = () => {
                   Explore Hotels →
                 </button>
               </div>
-            </Link>
+            </div>
           ))}
         </section>
       </section>
