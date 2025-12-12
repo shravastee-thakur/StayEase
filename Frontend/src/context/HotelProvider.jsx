@@ -65,10 +65,6 @@ const HotelProvider = ({ children }) => {
     }
   };
 
-  // const updateHotel = async (id) => {
-    
-  // };
-
   const deleteHotel = async (id) => {
     console.log(id);
 
@@ -101,6 +97,7 @@ const HotelProvider = ({ children }) => {
           color: "#fff",
         },
       });
+      return false;
     }
   };
 

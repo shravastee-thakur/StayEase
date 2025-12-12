@@ -22,7 +22,6 @@ const hotelSchema = new mongoose.Schema(
       url: { type: String },
       public_id: { type: String },
     },
-
     description: {
       type: String,
       required: true,
@@ -32,10 +31,10 @@ const hotelSchema = new mongoose.Schema(
       min: 0,
       max: 5,
     },
-    featured: {
-      type: Boolean,
-      default: false,
-    },
+    // featured: {
+    //   type: Boolean,
+    //   default: false,
+    // },
   },
   { timestamps: true }
 );

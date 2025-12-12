@@ -3,17 +3,37 @@ import { allowRole } from "../middlewares/roleMiddleware.js";
 import {
   createRoom,
   deleteRoom,
-  getRoomById,
-  getRooms,
+  getRoombyId,
   updateRoom,
 } from "../controllers/RoomController.js";
+import { roomSchema } from "../utils/joiValidation.js";
+import { authenticate } from "../middlewares/authMiddleware.js";
+import upload from "../config/cloudinary.js";
 
 const router = express.Router();
 
-router.post("/createRoom/:id", allowRole("admin"), createRoom);
-router.get("/getRooms", getRooms);
-router.get("/getRoomById/:id", getRoomById);
-router.put("/updateRoom/:id", allowRole("admin"), updateRoom);
-router.delete("/deleteRoom/:id", allowRole("admin"), deleteRoom);
+router.post(
+  "/createRoom",
+  authenticate,
+  allowRole("admin"),
+  roomSchema,
+  upload.single("image"),
+  createRoom
+);
+router.get("/getRoomById/:roomId", getRoombyId);
+router.put(
+  "/updateRoom/:roomId",
+  authenticate,
+  allowRole("admin"),
+  roomSchema,
+  upload.single("image"),
+  updateRoom
+);
+router.delete(
+  "/deleteRoom/:roomId",
+  authenticate,
+  allowRole("admin"),
+  deleteRoom
+);
 
 export default router;

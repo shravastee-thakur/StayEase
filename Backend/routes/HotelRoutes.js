@@ -11,6 +11,7 @@ import {
   updateHotel,
 } from "../controllers/HotelController.js";
 import upload from "../config/cloudinary.js";
+import { hotelSchema } from "../utils/joiValidation.js";
 
 const router = express.Router();
 
@@ -18,21 +19,23 @@ router.post(
   "/createHotel",
   authenticate,
   allowRole("admin"),
+  hotelSchema,
   upload.single("image"),
   createHotel
 );
 router.get("/getHotels", getHotels);
-router.get("/getHotelById/:id", getHotelById);
-router.get("/getHotelRooms/:id/rooms", getHotelRooms);
+router.get("/getHotelById/:hotelId", getHotelById);
+router.get("/getHotelRooms/:hotelId/rooms", getHotelRooms);
 router.put(
-  "/updateHotel/:id",
+  "/updateHotel/:hotelId",
   authenticate,
   allowRole("admin"),
+  hotelSchema,
   upload.single("image"),
   updateHotel
 );
 router.delete(
-  "/deleteHotel/:id",
+  "/deleteHotel/:hotelId",
   authenticate,
   allowRole("admin"),
   deleteHotel

@@ -104,8 +104,8 @@ const AdminHotels = () => {
       return;
     }
 
-    if (currentHotel) {
-      try {
+    try {
+      if (currentHotel) {
         await axios.put(
           `http://localhost:8000/api/v1/hotel/updateHotel/${currentHotel._id}`,
           data,
@@ -117,33 +117,38 @@ const AdminHotels = () => {
             withCredentials: true,
           }
         );
-      } catch (error) {
-        console.log(error);
-        toast.error("Failed to update hotel", {
+        toast.success("Hotel updated successfully!", {
           style: {
             borderRadius: "10px",
             background: "#333",
             color: "#fff",
           },
         });
-      }
-      setIsModalOpen(false);
-    } else {
-      try {
+      } else {
         await createHotel(data);
-        setIsModalOpen(false);
-        setFormData({
-          name: "",
-          city: "",
-          address: "",
-          distance: "",
-          description: "",
-        });
-        setImage(null);
-      } catch (error) {
-        console.error("Error creating hotel:", error);
-        alert("Failed to create hotel.");
       }
+
+      const updatedHotels = await fetchHotels();
+      setHotels(updatedHotels);
+
+      setFormData({
+        name: "",
+        city: "",
+        address: "",
+        distance: "",
+        description: "",
+      });
+      setImage(null);
+
+      setIsModalOpen(false);
+    } catch (error) {
+      console.error("Save error:", error);
+      toast.error(
+        currentHotel ? "Failed to update hotel" : "Failed to create hotel",
+        {
+          style: { borderRadius: "10px", background: "#333", color: "#fff" },
+        }
+      );
     }
   };
 

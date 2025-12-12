@@ -10,6 +10,7 @@ import { errorHandler } from "./middlewares/errorMiddleware.js";
 
 import userRoute from "./routes/UserRoutes.js";
 import hotelRoute from "./routes/HotelRoutes.js";
+import roomRoute from "./routes/RoomRoutes.js";
 
 const app = express();
 connectdb();
@@ -38,6 +39,9 @@ app.use("/api/v1/user", userRoute);
 
 app.use("/api/v1/hotel", hotelRoute);
 // http://localhost:8000/api/v1/hotel/createHotel
+
+app.use("/api/v1/room", roomRoute);
+// http://localhost:8000/api/v1/room/createRoom
 
 app.use((req, res, next) => {
   next({ statusCode: 404, message: `Route not found: ${req.originalUrl}` });

@@ -3,12 +3,12 @@ import { v2 as cloudinary } from "cloudinary";
 import Hotel from "../models/HotelModel.js";
 import Room from "../models/RoomModel.js";
 import logger from "../utils/logger.js";
+import sanitize from "mongo-sanitize";
 
 export const createHotel = async (req, res, next) => {
-  console.log(req.body);
-
   try {
-    const { name, city, address, distance, description } = req.body;
+    const sanitizeBody = sanitize(req.body);
+    const { name, city, address, distance, description } = sanitizeBody;
     if (!name || !city || !address || !distance || !description) {
       return res
         .status(400)
@@ -18,7 +18,7 @@ export const createHotel = async (req, res, next) => {
     if (!req.file) {
       return res.status(400).json({
         success: false,
-        message: "Product image is required",
+        message: "Hotel image is required",
       });
     }
 
@@ -68,8 +68,8 @@ export const getHotels = async (req, res, next) => {
 
 export const getHotelById = async (req, res, next) => {
   try {
-    const id = req.params.id;
-    const hotel = await Hotel.findById(id);
+    const hotelId = req.params.id;
+    const hotel = await Hotel.findById(hotelId);
     if (!hotel) {
       return res
         .status(404)
@@ -89,9 +89,10 @@ export const getHotelById = async (req, res, next) => {
 
 export const updateHotel = async (req, res, next) => {
   try {
-    const id = req.params.id;
+    req.body = sanitize(req.body);
+    const hotelId = req.params.id;
 
-    const hotel = await Hotel.findById(id);
+    const hotel = await Hotel.findById(hotelId);
     if (!hotel) {
       return res
         .status(404)
@@ -101,9 +102,16 @@ export const updateHotel = async (req, res, next) => {
     let updatedImage = hotel.image;
 
     if (req.file) {
-      if (hotel.image && hotel.image[0]?.public_id) {
-        await cloudinary.uploader.destroy(hotel.image[0].public_id);
+      if (hotel.image && hotel.image.public_id) {
+        try {
+          await cloudinary.uploader.destroy(hotel.image.public_id);
+        } catch (cloudinaryError) {
+          logger.error(
+            `Error deleting image from Cloudinary: ${cloudinaryError.message}`
+          );
+        }
       }
+
       const uploadImage = await uploadImageToCloudinary(req.file.buffer);
       updatedImage = {
         url: uploadImage.secure_url,
@@ -112,7 +120,7 @@ export const updateHotel = async (req, res, next) => {
     }
 
     const updatedHotel = await Hotel.findByIdAndUpdate(
-      id,
+      hotelId,
       {
         name: req.body.name || hotel.name,
         city: req.body.city || hotel.city,
@@ -137,17 +145,41 @@ export const updateHotel = async (req, res, next) => {
 
 export const deleteHotel = async (req, res, next) => {
   try {
-    const id = req.params.id;
+    const hotelId = req.params.id;
 
-    const hotel = await Hotel.findById(id);
+    const hotel = await Hotel.findById(hotelId);
     if (!hotel) {
       return res
         .status(404)
         .json({ success: false, message: "Hotel not found" });
     }
-    await Room.deleteMany({ hotelId: id });
 
-    const deleteHotel = await Hotel.findByIdAndDelete(id);
+    if (hotel.image && hotel.image.public_id) {
+      try {
+        await cloudinary.uploader.destroy(hotel.image.public_id);
+      } catch (cloudinaryError) {
+        logger.error(
+          `Error deleting image from Cloudinary: ${cloudinaryError.message}`
+        );
+      }
+    }
+
+    const hotelRooms = await Room.find({ hotelId });
+    for (const room of hotelRooms) {
+      if (room.image && room.image.public_id) {
+        try {
+          await cloudinary.uploader.destroy(room.image.public_id);
+        } catch (roomImageError) {
+          logger.error(
+            `Error deleting room image from Cloudinary for room ${room._id}: ${roomImageError.message}`
+          );
+        }
+      }
+    }
+
+    await Room.deleteMany({ hotelId });
+
+    const deleteHotel = await Hotel.findByIdAndDelete(hotelId);
 
     return res.status(200).json({
       success: true,
@@ -161,16 +193,16 @@ export const deleteHotel = async (req, res, next) => {
 
 export const getHotelRooms = async (req, res, next) => {
   try {
-    const id = req.params.id;
+    const hotelId = req.params.id;
 
-    const hotel = await Hotel.findById(id);
+    const hotel = await Hotel.findById(hotelId);
     if (!hotel) {
       return res
         .status(404)
         .json({ success: false, message: "Hotel not found" });
     }
 
-    const rooms = await Room.find({ hotelId: id });
+    const rooms = await Room.find({ hotelId: hotelId });
 
     return res.status(200).json({
       success: true,

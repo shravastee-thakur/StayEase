@@ -71,3 +71,38 @@ export const otpValidationSchema = (req, res, next) => {
 
   next();
 };
+
+export const roomSchema = () => {
+  const schema = joi.object({
+    type: joi.string().required(),
+    desc: joi.string().required(),
+    price: joi.number().required(),
+    maxPeople: joi.number().required(),
+  });
+
+  const { error } = schema.validate(req.body);
+  if (error) {
+    return res.status(400).json({
+      success: false,
+      message: error.details[0].message,
+    });
+  }
+};
+
+export const hotelSchema = () => {
+  const schema = joi.object({
+    name: joi.string().required(),
+    city: joi.string().required(),
+    address: joi.string().required(),
+    distance: joi.string().required(),
+    description: joi.string().required(),
+  });
+
+  const { error } = schema.validate(req.body);
+  if (error) {
+    return res.status(400).json({
+      success: false,
+      message: error.details[0].message,
+    });
+  }
+};
