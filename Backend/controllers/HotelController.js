@@ -68,7 +68,7 @@ export const getHotels = async (req, res, next) => {
 
 export const getHotelById = async (req, res, next) => {
   try {
-    const hotelId = req.params.id;
+    const { hotelId } = req.params;
     const hotel = await Hotel.findById(hotelId);
     if (!hotel) {
       return res
@@ -90,7 +90,7 @@ export const getHotelById = async (req, res, next) => {
 export const updateHotel = async (req, res, next) => {
   try {
     req.body = sanitize(req.body);
-    const hotelId = req.params.id;
+    const { hotelId } = req.params;
 
     const hotel = await Hotel.findById(hotelId);
     if (!hotel) {
@@ -145,7 +145,7 @@ export const updateHotel = async (req, res, next) => {
 
 export const deleteHotel = async (req, res, next) => {
   try {
-    const hotelId = req.params.id;
+    const { hotelId } = req.params;
 
     const hotel = await Hotel.findById(hotelId);
     if (!hotel) {
@@ -193,7 +193,7 @@ export const deleteHotel = async (req, res, next) => {
 
 export const getHotelRooms = async (req, res, next) => {
   try {
-    const hotelId = req.params.id;
+    const { hotelId } = req.params;
 
     const hotel = await Hotel.findById(hotelId);
     if (!hotel) {

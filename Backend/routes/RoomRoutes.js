@@ -20,7 +20,12 @@ router.post(
   upload.single("image"),
   createRoom
 );
+
+
 router.get("/getRoomById/:roomId", getRoombyId);
+
+
+
 router.put(
   "/updateRoom/:roomId",
   authenticate,
@@ -29,6 +34,9 @@ router.put(
   upload.single("image"),
   updateRoom
 );
+
+
+
 router.delete(
   "/deleteRoom/:roomId",
   authenticate,

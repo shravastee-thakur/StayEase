@@ -3,8 +3,10 @@ import { HotelContext } from "../../context/HotelProvider";
 import { AuthContext } from "../../context/AuthProvider";
 import axios from "axios";
 import toast from "react-hot-toast";
+import { useNavigate } from "react-router-dom";
 
 const AdminHotels = () => {
+  const navigate = useNavigate();
   const { createHotel, fetchHotels, deleteHotel } = useContext(HotelContext);
   const { accessToken } = useContext(AuthContext);
 
@@ -202,6 +204,13 @@ const AdminHotels = () => {
                   className="px-3 py-1 bg-red-500 text-white text-sm rounded hover:bg-red-600"
                 >
                   Delete
+                </button>
+                {/* Add Manage Rooms Button */}
+                <button
+                  onClick={() => navigate(`/admin/hotels/${hotel._id}/rooms`)}
+                  className="px-3 py-1 bg-blue-500 text-white text-sm rounded hover:bg-blue-600"
+                >
+                  Manage Rooms
                 </button>
               </div>
             </div>

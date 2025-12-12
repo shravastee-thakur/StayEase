@@ -1,6 +1,7 @@
 import { useState } from "react";
-import AdminRooms from "./AdminRooms";
-import AdminHotels from "./AdminHotels";
+// import AdminRooms from "./AdminRooms";
+// import AdminHotels from "./AdminHotels";
+import { Outlet } from "react-router-dom";
 
 const Admin = () => {
   const [activeTab, setActiveTab] = useState("hotels"); // 'hotels' or 'rooms'
@@ -12,8 +13,12 @@ const Admin = () => {
           <h1 className="text-2xl font-bold text-gray-800">Admin Dashboard</h1>
         </div>
 
+        <div className="bg-white rounded-lg shadow-sm p-4 md:p-6">
+          <Outlet />
+        </div>
+
         {/* Tabs */}
-        <div className="flex border-b border-gray-200 mb-6">
+        {/* <div className="flex border-b border-gray-200 mb-6">
           <button
             onClick={() => setActiveTab("hotels")}
             className={`px-4 py-2 font-medium text-sm rounded-t-lg ${
@@ -34,13 +39,13 @@ const Admin = () => {
           >
             Manage Rooms
           </button>
-        </div>
+        </div> */}
 
         {/* Tab Content */}
-        <div className="bg-white rounded-lg shadow-sm p-4 md:p-6">
+        {/* <div className="bg-white rounded-lg shadow-sm p-4 md:p-6">
           {activeTab === "hotels" && <AdminHotels />}
           {activeTab === "rooms" && <AdminRooms />}
-        </div>
+        </div> */}
       </div>
     </div>
   );

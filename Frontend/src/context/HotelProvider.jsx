@@ -1,4 +1,4 @@
-import { createContext, useContext } from "react";
+import { createContext, useContext, useState } from "react";
 import axios from "axios";
 import toast from "react-hot-toast";
 import { AuthContext } from "./AuthProvider";
@@ -26,8 +26,8 @@ const HotelProvider = ({ children }) => {
         toast.success(res.data.message, {
           style: {
             borderRadius: "10px",
-            background: "#C5FF95",
-            color: "#333",
+            background: "#333",
+            color: "#fff",
           },
         });
         return true;
@@ -56,6 +56,7 @@ const HotelProvider = ({ children }) => {
           withCredentials: true,
         }
       );
+      console.log(res.data);
 
       if (res.data.success) {
         return res.data.hotels;

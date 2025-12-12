@@ -8,8 +8,8 @@ import logger from "../utils/logger.js";
 export const createRoom = async (req, res, next) => {
   try {
     const sanitizeBody = sanitize(req.body);
-    const { hotelId, type, desc, price, maxPeople } = sanitizeBody;
-    if (!hotelId || !type || !desc || !price || !maxPeople) {
+    const { hotelId, type, description, price, maxPeople } = sanitizeBody;
+    if (!hotelId || !type || !description || !price || !maxPeople) {
       return res
         .status(400)
         .json({ success: false, message: "All fields are required" });
@@ -38,7 +38,7 @@ export const createRoom = async (req, res, next) => {
         public_id: uploadImg.public_id,
       },
       type,
-      desc,
+      description,
       price,
       maxPeople,
     });
@@ -54,7 +54,8 @@ export const createRoom = async (req, res, next) => {
 
 export const getRoombyId = async (req, res, next) => {
   try {
-    const roomId = req.params.id;
+    const { roomId } = req.params;
+    console.log(roomId);
 
     const room = await Room.findById(roomId).populate("hotelId", "name city");
     if (!room) {
@@ -74,7 +75,7 @@ export const getRoombyId = async (req, res, next) => {
 export const updateRoom = async (req, res, next) => {
   try {
     req.body = sanitize(req.body);
-    const roomId = req.params.id;
+    const { roomId } = req.params;
     const room = await Room.findById(roomId);
     if (!room) {
       return res
@@ -104,7 +105,7 @@ export const updateRoom = async (req, res, next) => {
       {
         image: updatedImage,
         type: req.body.type || room.type,
-        desc: req.body.desc || room.desc,
+        description: req.body.description || room.description,
         price: req.body.price || room.price,
         maxPeople: req.body.maxPeople || room.maxPeople,
       },
@@ -124,7 +125,7 @@ export const updateRoom = async (req, res, next) => {
 
 export const deleteRoom = async (req, res, next) => {
   try {
-    const roomId = req.params.id;
+    const { roomId } = req.params;
     const room = await Room.findById(roomId);
     if (!room) {
       return res.status(404).json({

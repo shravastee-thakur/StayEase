@@ -10,6 +10,8 @@ import Forgetpassword from "./pages/user/ForgetPassword";
 import ResetPassword from "./pages/user/ResetPassword";
 import { Toaster } from "react-hot-toast";
 import Admin from "./pages/Admin/Admin";
+import AdminHotels from "./pages/Admin/AdminHotels";
+import AdminRooms from "./pages/Admin/AdminRooms";
 // import CityPage from "./pages/CityPage";
 
 const App = () => {
@@ -28,7 +30,10 @@ const App = () => {
           <Route path="/verify-login" element={<VerifyLogin />} />
           <Route path="/forget-password" element={<Forgetpassword />} />
           <Route path="/reset-password" element={<ResetPassword />} />
-          <Route path="/admin" element={<Admin />} />
+          <Route path="/admin" element={<Admin />}>
+            <Route index element={<AdminHotels />} />
+            <Route path="hotels/:hotelId/rooms" element={<AdminRooms />} />
+          </Route>
         </Routes>
         <Footer />
       </BrowserRouter>

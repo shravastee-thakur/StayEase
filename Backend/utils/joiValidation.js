@@ -72,10 +72,10 @@ export const otpValidationSchema = (req, res, next) => {
   next();
 };
 
-export const roomSchema = () => {
+export const roomSchema = (req, res, next) => {
   const schema = joi.object({
     type: joi.string().required(),
-    desc: joi.string().required(),
+    description: joi.string().required(),
     price: joi.number().required(),
     maxPeople: joi.number().required(),
   });
@@ -87,6 +87,8 @@ export const roomSchema = () => {
       message: error.details[0].message,
     });
   }
+
+  next();
 };
 
 export const hotelSchema = () => {
