@@ -11,7 +11,7 @@ const HotelProvider = ({ children }) => {
   const createHotel = async (formData) => {
     try {
       const res = await axios.post(
-        "http://localhost:8000/api/v1/hotel/createHotel",
+        "http://localhost:8000/api/v1/hotels/createHotel",
         formData,
         {
           headers: {
@@ -48,7 +48,7 @@ const HotelProvider = ({ children }) => {
   const fetchHotels = async () => {
     try {
       const res = await axios.get(
-        "http://localhost:8000/api/v1/hotel/getHotels",
+        "http://localhost:8000/api/v1/hotels/getHotels",
         {
           headers: {
             "Content-Type": "application/json",
@@ -66,12 +66,33 @@ const HotelProvider = ({ children }) => {
     }
   };
 
+  const fetchHotelById = async (id) => {
+    try {
+      const res = await axios.get(
+        `http://localhost:8000/api/v1/hotels/getHotelById/${id}`,
+        {
+          headers: {
+            "Content-Type": "application/json",
+          },
+          withCredentials: true,
+        }
+      );
+      console.log(res.data);
+
+      if (res.data.success) {
+        return res.data.hotel;
+      }
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
   const deleteHotel = async (id) => {
     console.log(id);
 
     try {
       const res = await axios.delete(
-        `http://localhost:8000/api/v1/hotel/deleteHotel/${id}`,
+        `http://localhost:8000/api/v1/hotels/deleteHotel/${id}`,
         {
           headers: {
             Authorization: `Bearer ${accessToken}`,
@@ -103,7 +124,9 @@ const HotelProvider = ({ children }) => {
   };
 
   return (
-    <HotelContext.Provider value={{ createHotel, fetchHotels, deleteHotel }}>
+    <HotelContext.Provider
+      value={{ createHotel, fetchHotels, fetchHotelById, deleteHotel }}
+    >
       {children}
     </HotelContext.Provider>
   );

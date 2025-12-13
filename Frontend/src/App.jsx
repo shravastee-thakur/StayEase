@@ -12,7 +12,8 @@ import { Toaster } from "react-hot-toast";
 import Admin from "./pages/Admin/Admin";
 import AdminHotels from "./pages/Admin/AdminHotels";
 import AdminRooms from "./pages/Admin/AdminRooms";
-// import CityPage from "./pages/CityPage";
+import Rooms from "./pages/Rooms";
+import HotelRoomsPage from "./pages/HotelRoomsPage";
 
 const App = () => {
   return (
@@ -25,11 +26,13 @@ const App = () => {
         <Routes>
           <Route path="/" element={<HomePage />} />
           <Route path="/cities/:city" element={<CityHotelsPage />} />
+          <Route path="/hotel/:hotelId/rooms" element={<Rooms />} />
           <Route path="/register" element={<Register />} />
           <Route path="/login" element={<Login />} />
           <Route path="/verify-login" element={<VerifyLogin />} />
           <Route path="/forget-password" element={<Forgetpassword />} />
           <Route path="/reset-password" element={<ResetPassword />} />
+          <Route path="/hotelRoomsPage" element={<HotelRoomsPage />} />
           <Route path="/admin" element={<Admin />}>
             <Route index element={<AdminHotels />} />
             <Route path="hotels/:hotelId/rooms" element={<AdminRooms />} />

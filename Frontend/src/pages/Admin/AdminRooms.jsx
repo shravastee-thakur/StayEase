@@ -10,6 +10,7 @@ import KeyboardBackspaceIcon from "@mui/icons-material/KeyboardBackspace";
 const AdminRooms = () => {
   const { createRoom, fetchRooms, deleteRoom } = useContext(RoomContext);
   const { accessToken } = useContext(AuthContext);
+  const [loading, setLoading] = useState(true);
   const { hotelId } = useParams();
   const navigate = useNavigate();
 
@@ -113,7 +114,7 @@ const AdminRooms = () => {
         console.log("currentRoom", currentRoom._id);
 
         await axios.put(
-          `http://localhost:8000/api/v1/room/updateRoom/${currentRoom._id}`,
+          `http://localhost:8000/api/v1/rooms/updateRoom/${currentRoom._id}`,
           data,
           {
             headers: {
@@ -168,13 +169,14 @@ const AdminRooms = () => {
     <div className=" bg-gray-50 min-h-screen">
       <div className="flex justify-between items-center mb-6">
         <button
-          onClick={() => navigate(-1)} 
+          onClick={() => navigate(-1)}
           className="flex items-center text-gray-600 hover:text-gray-900"
         >
-          <KeyboardBackspaceIcon className="text-blue-600"/>
-        
+          <KeyboardBackspaceIcon className="text-blue-600" />
         </button>
-        <h1 className="text-xl md:text-2xl font-bold text-gray-800">Manage Rooms</h1>
+        <h1 className="text-xl md:text-2xl font-bold text-gray-800">
+          Manage Rooms
+        </h1>
         <button
           onClick={openCreateModal}
           className="w-6 h-6 md:w-12 md:h-12 rounded-full bg-blue-600 text-white flex items-center justify-center text-2xl hover:bg-blue-700 shadow-md"
@@ -198,7 +200,7 @@ const AdminRooms = () => {
 
             <div className="p-4">
               <h3 className="font-bold text-lg text-gray-800">{room.type}</h3>
-              <p className="text-sm text-gray-600 mt-1">
+              <p className="text-sm text-blue-600 font-semibold mt-1">
                 ₹{room.price} / night
               </p>
               <p className="text-sm text-gray-500">

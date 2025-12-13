@@ -12,6 +12,9 @@ import upload from "../config/cloudinary.js";
 
 const router = express.Router();
 
+router.get("/getRoomById/:roomId", getRoombyId);
+
+// admin
 router.post(
   "/createRoom",
   authenticate,
@@ -21,11 +24,6 @@ router.post(
   createRoom
 );
 
-
-router.get("/getRoomById/:roomId", getRoombyId);
-
-
-
 router.put(
   "/updateRoom/:roomId",
   authenticate,
@@ -34,8 +32,6 @@ router.put(
   upload.single("image"),
   updateRoom
 );
-
-
 
 router.delete(
   "/deleteRoom/:roomId",

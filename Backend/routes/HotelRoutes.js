@@ -15,6 +15,7 @@ import { hotelSchema } from "../utils/joiValidation.js";
 
 const router = express.Router();
 
+// admin
 router.post(
   "/createHotel",
   authenticate,
@@ -23,9 +24,6 @@ router.post(
   upload.single("image"),
   createHotel
 );
-router.get("/getHotels", getHotels);
-router.get("/getHotelById/:hotelId", getHotelById);
-router.get("/getHotelRooms/:hotelId/rooms", getHotelRooms);
 router.put(
   "/updateHotel/:hotelId",
   authenticate,
@@ -40,5 +38,10 @@ router.delete(
   allowRole("admin"),
   deleteHotel
 );
+
+// user
+router.get("/getHotels", getHotels);
+router.get("/getHotelById/:hotelId", getHotelById);
+router.get("/getHotelRooms/:hotelId/rooms", getHotelRooms);
 
 export default router;

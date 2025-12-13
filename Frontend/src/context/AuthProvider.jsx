@@ -14,7 +14,7 @@ const AuthProvider = ({ children }) => {
     const refreshTokenHandler = async () => {
       try {
         const res = await axios.post(
-          "http://localhost:8000/api/v1/user/refreshHandler",
+          "http://localhost:8000/api/v1/users/refreshHandler",
           {},
           {
             withCredentials: true,
@@ -41,7 +41,7 @@ const AuthProvider = ({ children }) => {
   const loginStepOne = async (formData) => {
     try {
       const res = await axios.post(
-        "http://localhost:8000/api/v1/user/loginStepOne",
+        "http://localhost:8000/api/v1/users/loginStepOne",
         formData,
         {
           headers: {
@@ -70,7 +70,7 @@ const AuthProvider = ({ children }) => {
   const verifyLoginOtp = async (otp) => {
     try {
       const res = await axios.post(
-        "http://localhost:8000/api/v1/user/verifyOtp",
+        "http://localhost:8000/api/v1/users/verifyOtp",
         { userId, otp },
         {
           headers: {
@@ -102,7 +102,7 @@ const AuthProvider = ({ children }) => {
     if (!accessToken) return;
     try {
       const res = await axios.post(
-        "http://localhost:8000/api/v1/user/logout",
+        "http://localhost:8000/api/v1/users/logout",
         {},
         {
           headers: {

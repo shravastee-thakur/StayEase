@@ -1,15 +1,15 @@
 import React, { useState, useEffect, useContext } from "react";
-import { useParams, Link } from "react-router-dom";
+import { useParams, Link, useNavigate } from "react-router-dom";
 import { HotelContext } from "../context/HotelProvider";
 
 const CityHotelsPage = () => {
+  const navigate = useNavigate();
   const { fetchHotels } = useContext(HotelContext);
   const { city: citySlug } = useParams();
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
   const [hotels, setHotels] = useState([]);
 
-  
   const CITY_MAPPING = {
     Mumbai: "Mumbai",
     Delhi: "New Delhi", // Critical fix!
@@ -41,7 +41,6 @@ const CityHotelsPage = () => {
       loadAndFilterHotels();
     }
   }, [citySlug]);
-
 
   const cityNames = {
     mumbai: "Mumbai",
@@ -85,7 +84,7 @@ const CityHotelsPage = () => {
             {hotels.map((hotel) => (
               <Link
                 key={hotel._id}
-                to={`/hotels/${hotel._id}`}
+                to={`/hotel/${hotel._id}/rooms`}
                 className="bg-white rounded-lg shadow-md overflow-hidden hover:shadow-xl transition-shadow"
               >
                 <img
