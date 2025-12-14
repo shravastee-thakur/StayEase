@@ -70,6 +70,26 @@ const RoomProvider = ({ children }) => {
     }
   };
 
+  const getRoomById = async (roomId) => {
+    try {
+      const res = await axios.get(
+        `http://localhost:8000/api/v1/rooms/getRoomById/${roomId}`,
+        {
+          headers: {
+            "Content-Type": "application/json",
+          },
+          withCredentials: true,
+        }
+      );
+      console.log(res.data);
+      if (res.data.success) {
+        return res.data.room;
+      }
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
   const deleteRoom = async (id) => {
     try {
       const res = await axios.delete(
@@ -105,7 +125,9 @@ const RoomProvider = ({ children }) => {
   };
 
   return (
-    <RoomContext.Provider value={{ createRoom, fetchRooms, deleteRoom }}>
+    <RoomContext.Provider
+      value={{ createRoom, fetchRooms, getRoomById, deleteRoom }}
+    >
       {children}
     </RoomContext.Provider>
   );

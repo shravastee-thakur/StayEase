@@ -37,6 +37,7 @@ const bookingSchema = new mongoose.Schema(
   },
   { timestamps: true }
 );
+bookingSchema.index({ roomId: 1, startDate: 1, endDate: 1, status: 1 });
 
 const Booking = mongoose.model("Booking", bookingSchema);
 export default Booking;

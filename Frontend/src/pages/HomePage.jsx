@@ -1,4 +1,4 @@
-import { Link, useNavigate } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import CoreFeatures from "../components/Corefeatures";
 import { useState } from "react";
 

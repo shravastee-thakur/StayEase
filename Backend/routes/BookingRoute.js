@@ -16,7 +16,11 @@ const router = express.Router();
 // user
 router.post("/createBooking", authenticate, createBooking);
 router.get("/getMyBookings", authenticate, getMyBookings);
-router.get("/checkRoomAvailability", authenticate, checkRoomAvailability);
+router.get(
+  "/checkRoomAvailability/:roomId",
+  authenticate,
+  checkRoomAvailability
+);
 router.put("/cancelBooking/:bookingId", authenticate, cancelBooking);
 // router.get("/getBookingById/:id", authenticate, getBookingById);
 

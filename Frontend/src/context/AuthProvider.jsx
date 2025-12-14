@@ -55,8 +55,8 @@ const AuthProvider = ({ children }) => {
         toast.success(res.data.message, {
           style: {
             borderRadius: "10px",
-            background: "#C5FF95",
-            color: "#333",
+            background: "#333",
+            color: "#fff",
           },
         });
         setUserId(res.data.userId);
@@ -64,6 +64,14 @@ const AuthProvider = ({ children }) => {
       }
     } catch (error) {
       console.log(error);
+      toast.error("Invalid email or password", {
+        style: {
+          borderRadius: "10px",
+          background: "#FFB5B5",
+          color: "#333",
+        },
+      });
+      return false;
     }
   };
 
@@ -84,8 +92,8 @@ const AuthProvider = ({ children }) => {
         toast.success(res.data.message, {
           style: {
             borderRadius: "10px",
-            background: "#C5FF95",
-            color: "#333",
+            background: "#333",
+            color: "#fff",
           },
         });
         setVerified(res.data.user.verified);

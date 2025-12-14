@@ -7,8 +7,7 @@ import sanitize from "mongo-sanitize";
 export const createBooking = async (req, res, next) => {
   try {
     const sanitizeBody = sanitize(req.body);
-    const { userId, roomId, hotelId, startDate, endDate, totalAmount } =
-      sanitizeBody;
+    const { roomId, hotelId, startDate, endDate, totalAmount } = sanitizeBody;
 
     const room = await Room.findById(roomId);
     if (!room) {
@@ -31,11 +30,18 @@ export const createBooking = async (req, res, next) => {
       status: { $in: ["pending", "confirmed"] },
       $or: [
         {
-          startDate: { $lte: new Date(endDate) },
-          endDate: { $gte: new Date(startDate) },
+          startDate: { $lt: new Date(endDate) },
+          endDate: { $gt: new Date(startDate) },
         },
       ],
     });
+
+    if (new Date(startDate) >= new Date(endDate)) {
+      return res.status(400).json({
+        success: false,
+        message: "Check-out date must be after check-in date",
+      });
+    }
 
     if (overlappingBookings.length > 0) {
       return res.status(400).json({
@@ -45,7 +51,7 @@ export const createBooking = async (req, res, next) => {
     }
 
     const booking = await Booking.create({
-      userId: req.user.id || userId,
+      userId: req.user.id,
       hotelId,
       roomId,
       startDate: new Date(startDate),
@@ -81,6 +87,7 @@ export const getAllBookings = async (req, res, next) => {
     }
 
     const bookings = await Booking.find()
+      .sort({ createdAt: -1 })
       .populate("userId", "name email")
       .populate("roomId", "type price maxPeople")
       .populate("hotelId", "name city address");
@@ -209,11 +216,18 @@ export const checkRoomAvailability = async (req, res, next) => {
       status: { $in: ["pending", "confirmed"] },
       $or: [
         {
-          startDate: { $lte: new Date(endDate) },
-          endDate: { $gte: new Date(startDate) },
+          startDate: { $lt: new Date(endDate) },
+          endDate: { $gt: new Date(startDate) },
         },
       ],
     });
+
+    if (new Date(startDate) >= new Date(endDate)) {
+      return res.status(400).json({
+        success: false,
+        message: "Check-out date must be after check-in date",
+      });
+    }
 
     const isAvailable = overlappingBookings.length === 0;
 

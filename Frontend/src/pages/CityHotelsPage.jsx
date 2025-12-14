@@ -1,5 +1,5 @@
-import React, { useState, useEffect, useContext } from "react";
-import { useParams, Link, useNavigate } from "react-router-dom";
+import { useState, useEffect, useContext } from "react";
+import { useParams, useNavigate, useLocation } from "react-router-dom";
 import { HotelContext } from "../context/HotelProvider";
 
 const CityHotelsPage = () => {
@@ -57,6 +57,21 @@ const CityHotelsPage = () => {
     );
   }
 
+  const searchParams = new URLSearchParams(location.search);
+  const checkIn = searchParams.get("checkIn") || "";
+  const checkOut = searchParams.get("checkOut") || "";
+  const guests = searchParams.get("guests") || "2";
+
+  const handleHotelClick = (hotelId) => {
+    const queryParams = new URLSearchParams({
+      checkIn,
+      checkOut,
+      guests,
+    }).toString();
+
+    navigate(`/hotel/${hotelId}/rooms?${queryParams}`);
+  };
+
   if (error) {
     return (
       <div className="min-h-screen flex items-center justify-center">
@@ -82,10 +97,10 @@ const CityHotelsPage = () => {
         ) : (
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
             {hotels.map((hotel) => (
-              <Link
+              <div
                 key={hotel._id}
-                to={`/hotel/${hotel._id}/rooms`}
-                className="bg-white rounded-lg shadow-md overflow-hidden hover:shadow-xl transition-shadow"
+                onClick={() => handleHotelClick(hotel._id)}
+                className="bg-white rounded-lg shadow-md overflow-hidden hover:shadow-xl transition-shadow cursor-pointer"
               >
                 <img
                   src={hotel.image?.url}
@@ -99,7 +114,7 @@ const CityHotelsPage = () => {
                   </h3>
                   <p className="text-sm text-gray-600">{hotel.address}</p>
                 </div>
-              </Link>
+              </div>
             ))}
           </div>
         )}

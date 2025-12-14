@@ -1,81 +1,10 @@
 import { useState, useEffect, useContext } from "react";
-import { useParams } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import { RoomContext } from "../context/RoomProvider";
 
-const SearchBar = ({ checkIn, checkOut, guests, onSearch }) => {
-  const [dates, setDates] = useState({ checkIn, checkOut });
-  const [guestCount, setGuestCount] = useState(guests);
-
-  const handleSubmit = (e) => {
-    e.preventDefault();
-    if (!dates.checkIn || !dates.checkOut || guestCount < 1) {
-      alert("Please select valid dates and at least 1 guest.");
-      return;
-    }
-    onSearch(dates, guestCount);
-  };
-
-  return (
-    <form
-      onSubmit={handleSubmit}
-      className="bg-white p-4 rounded-lg shadow mb-6"
-    >
-      <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
-        <div>
-          <label className="block text-sm font-medium text-gray-700">
-            Check-in
-          </label>
-          <input
-            type="date"
-            value={dates.checkIn}
-            onChange={(e) => setDates({ ...dates, checkIn: e.target.value })}
-            className="mt-1 block w-full border border-gray-300 rounded-md p-2"
-            min={new Date().toISOString().split("T")[0]}
-          />
-        </div>
-        <div>
-          <label className="block text-sm font-metal text-gray-700">
-            Check-out
-          </label>
-          <input
-            type="date"
-            value={dates.checkOut}
-            onChange={(e) => setDates({ ...dates, checkOut: e.target.value })}
-            className="mt-1 block w-full border border-gray-300 rounded-md p-2"
-            min={dates.checkIn || new Date().toISOString().split("T")[0]}
-          />
-        </div>
-        <div>
-          <label className="block text-sm font-medium text-gray-700">
-            Guests
-          </label>
-          <select
-            value={guestCount}
-            onChange={(e) => setGuestCount(Number(e.target.value))}
-            className="mt-1 block w-full border border-gray-300 rounded-md p-2"
-          >
-            {[1, 2, 3, 4, 5, 6].map((num) => (
-              <option key={num} value={num}>
-                {num} {num === 1 ? "Guest" : "Guests"}
-              </option>
-            ))}
-          </select>
-        </div>
-        <div className="flex items-end">
-          <button
-            type="submit"
-            className="w-full bg-[#2f7003] text-white py-2 px-4 rounded-md hover:bg-[#255a02] transition"
-          >
-            Update Search
-          </button>
-        </div>
-      </div>
-    </form>
-  );
-};
-
 const Rooms = () => {
-  const { hotelId } = useParams(); // Get hotelId from URL
+  const navigate = useNavigate();
+  const { hotelId } = useParams();
   const { fetchRooms } = useContext(RoomContext);
   const [rooms, setRooms] = useState([]);
   const [loading, setLoading] = useState(true);
@@ -108,6 +37,21 @@ const Rooms = () => {
     );
   }
 
+  const searchParams = new URLSearchParams(location.search);
+  const checkIn = searchParams.get("checkIn") || "";
+  const checkOut = searchParams.get("checkOut") || "";
+  const guests = searchParams.get("guests") || "2";
+
+  const handleRoomClick = (roomId) => {
+    const queryParams = new URLSearchParams({
+      checkIn,
+      checkOut,
+      guests,
+    }).toString();
+
+    navigate(`/room-detail/${roomId}?${queryParams}`);
+  };
+
   if (error) {
     return (
       <div className="flex items-center justify-center p-8">
@@ -131,6 +75,7 @@ const Rooms = () => {
         {rooms.map((room) => (
           <div
             key={room._id}
+            onClick={() => handleRoomClick(room._id)}
             className="bg-white rounded-lg shadow-md overflow-hidden border border-gray-200 hover:shadow-lg transition-shadow"
           >
             <img
