@@ -35,7 +35,7 @@ const Navbar = () => {
           <p className="hover:text-yellow-200 transition cursor-pointer text-white text-lg">
             Car Rental
           </p>
-          {role === "admin" && (
+          {verified && role === "admin" && (
             <p className="hover:text-yellow-200 transition cursor-pointer text-white text-lg">
               <Link to={"/admin"}>Admin</Link>
             </p>

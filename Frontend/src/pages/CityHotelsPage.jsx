@@ -63,13 +63,19 @@ const CityHotelsPage = () => {
   const guests = searchParams.get("guests") || "2";
 
   const handleHotelClick = (hotelId) => {
-    const queryParams = new URLSearchParams({
-      checkIn,
-      checkOut,
-      guests,
-    }).toString();
+    const params = new URLSearchParams();
 
-    navigate(`/hotel/${hotelId}/rooms?${queryParams}`);
+    if (checkIn) params.set("checkIn", checkIn);
+    if (checkOut) params.set("checkOut", checkOut);
+    if (checkIn || checkOut) params.set("guests", guests);
+
+    const queryString = params.toString();
+
+    navigate(
+      queryString
+        ? `/hotel/${hotelId}/rooms?${queryString}`
+        : `/hotel/${hotelId}/rooms`
+    );
   };
 
   if (error) {

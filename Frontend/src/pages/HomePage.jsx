@@ -5,7 +5,7 @@ import { useState } from "react";
 const HomePage = () => {
   const [destination, setDestination] = useState("");
   const [dates, setDates] = useState({ checkIn: "", checkOut: "" });
-  const [guests, setGuests] = useState(2);
+  const [guests, setGuests] = useState("");
 
   const navigate = useNavigate();
 
@@ -128,11 +128,13 @@ const HomePage = () => {
                   <label className="text-xs text-gray-500 block mb-1">
                     Guests
                   </label>
+
                   <select
                     value={guests}
                     onChange={(e) => setGuests(Number(e.target.value))}
                     className="w-full px-3 py-2 border border-gray-300 rounded focus:outline-none focus:ring-2 focus:ring-[#2f7003]"
                   >
+                    <option value="">Guests</option>
                     {[1, 2, 3, 4, 5, 6].map((num) => (
                       <option key={num} value={num}>
                         {num} {num === 1 ? "Guest" : "Guests"}

@@ -3,19 +3,20 @@ import { useParams, useNavigate, useLocation } from "react-router-dom";
 import axios from "axios";
 import { AuthContext } from "../context/AuthProvider";
 import { RoomContext } from "../context/RoomProvider";
+import toast from "react-hot-toast";
 
 const RoomDetail = () => {
   const { roomId } = useParams();
   const navigate = useNavigate();
   const location = useLocation();
-  const { verified } = useContext(AuthContext);
+  const { verified, accessToken } = useContext(AuthContext);
   const { getRoomById } = useContext(RoomContext);
 
   // Extract initial dates from URL search params (if user came from hotel page)
   const searchParams = new URLSearchParams(location.search);
   const initialCheckIn = searchParams.get("checkIn") || "";
   const initialCheckOut = searchParams.get("checkOut") || "";
-  const initialGuests = parseInt(searchParams.get("guests")) || 1;
+  const initialGuests = parseInt(searchParams.get("guests")) || "";
 
   // State
   const [room, setRoom] = useState([]);
@@ -30,6 +31,14 @@ const RoomDetail = () => {
   const [isAvailable, setIsAvailable] = useState(null);
   const [checkingAvailability, setCheckingAvailability] = useState(false);
   const [bookingLoading, setBookingLoading] = useState(false);
+
+  const nights = Math.ceil(
+    (new Date(dates.checkOut) - new Date(dates.checkIn)) / (1000 * 60 * 60 * 24)
+  );
+  const totalAmount =
+    dates.checkIn && dates.checkOut && !isNaN(nights) && nights > 0
+      ? nights * room.price
+      : null;
 
   // Fetch room details
   useEffect(() => {
@@ -60,8 +69,12 @@ const RoomDetail = () => {
           `http://localhost:8000/api/v1/bookings/checkRoomAvailability/${roomId}`,
           {
             params: { startDate: dates.checkIn, endDate: dates.checkOut },
+            headers: {
+              Authorization: `Bearer ${accessToken}`,
+            },
           }
         );
+
         setIsAvailable(res.data.data.isAvailable);
       } catch (err) {
         setIsAvailable(false);
@@ -75,8 +88,7 @@ const RoomDetail = () => {
   }, [dates, roomId]);
 
   const handleBook = async () => {
-    if (!user) {
-      // Redirect to login with return URL
+    if (!verified) {
       navigate(
         `/login?redirect=${encodeURIComponent(
           location.pathname + location.search
@@ -90,28 +102,44 @@ const RoomDetail = () => {
       return;
     }
 
-    const nights = Math.ceil(
-      (new Date(dates.checkOut) - new Date(dates.checkIn)) /
-        (1000 * 60 * 60 * 24)
-    );
-    const totalAmount = nights * room.price;
-
     setBookingLoading(true);
     try {
-      const res = await axios.post("/api/bookings", {
-        roomId,
-        hotelId: room.hotelId,
-        startDate: dates.checkIn,
-        endDate: dates.checkOut,
-        totalAmount,
-      });
+      const res = await axios.post(
+        "http://localhost:8000/api/v1/bookings/createBooking",
+        {
+          roomId,
+          hotelId: room.hotelId,
+          startDate: dates.checkIn,
+          endDate: dates.checkOut,
+          totalAmount,
+        },
+        {
+          headers: {
+            Authorization: `Bearer ${accessToken}`,
+          },
+          withCredentials: true,
+        }
+      );
+      console.log(res.data);
 
       if (res.data.success) {
-        alert("Booking created successfully!");
-        navigate("/my-bookings");
+        setDates({ checkIn: "", checkOut: "" });
+        toast.success(res.data.message, {
+          style: {
+            borderRadius: "10px",
+            background: "#333",
+            color: "#fff",
+          },
+        });
       }
     } catch (err) {
-      alert(err.response?.data?.message || "Booking failed. Please try again.");
+      toast.error("Failed to book", {
+        style: {
+          borderRadius: "10px",
+          background: "#FFB5B5",
+          color: "#333",
+        },
+      });
     } finally {
       setBookingLoading(false);
     }
@@ -155,8 +183,16 @@ const RoomDetail = () => {
           <div className="flex items-center mt-4 text-sm text-gray-500">
             <span>Max {room.maxPeople} guests</span>
             <span className="mx-2">•</span>
-            <span>₹ {room.price} price / night</span>
+            <span>₹ {room.price} / night</span>
           </div>
+          {totalAmount && (
+            <div className="pt-2 text-blue-800">
+              <span className="mr-2">Total Amount:</span>
+              <span className="font-bold">
+                ₹ {totalAmount.toLocaleString()}
+              </span>
+            </div>
+          )}
 
           {/* Booking Form */}
           <div className="mt-8 bg-gray-50 p-4 rounded-lg">
@@ -207,6 +243,7 @@ const RoomDetail = () => {
                   onChange={(e) => setGuests(Number(e.target.value))}
                   className="mt-1 block w-full border border-gray-300 rounded-md p-2"
                 >
+                  <option value="">Guests</option>
                   {[1, 2, 3, 4, 5, 6].map((num) => (
                     <option key={num} value={num}>
                       {num} {num === 1 ? "Guest" : "Guests"}

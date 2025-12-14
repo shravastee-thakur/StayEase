@@ -43,13 +43,19 @@ const Rooms = () => {
   const guests = searchParams.get("guests") || "2";
 
   const handleRoomClick = (roomId) => {
-    const queryParams = new URLSearchParams({
-      checkIn,
-      checkOut,
-      guests,
-    }).toString();
+    const params = new URLSearchParams();
 
-    navigate(`/room-detail/${roomId}?${queryParams}`);
+    if (checkIn) params.set("checkIn", checkIn);
+    if (checkOut) params.set("checkOut", checkOut);
+    if (checkIn || checkOut) params.set("guests", guests);
+
+    const queryString = params.toString();
+
+    navigate(
+      queryString
+        ? `/room-detail/${roomId}?${queryString}`
+        : `/room-detail/${roomId}`
+    );
   };
 
   if (error) {
@@ -76,7 +82,7 @@ const Rooms = () => {
           <div
             key={room._id}
             onClick={() => handleRoomClick(room._id)}
-            className="bg-white rounded-lg shadow-md overflow-hidden border border-gray-200 hover:shadow-lg transition-shadow"
+            className="bg-white rounded-lg shadow-md overflow-hidden border border-gray-200 hover:shadow-lg transition-shadow cursor-pointer"
           >
             <img
               src={room.image?.url}
