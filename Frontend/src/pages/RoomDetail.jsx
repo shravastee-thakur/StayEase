@@ -131,6 +131,7 @@ const RoomDetail = () => {
             color: "#fff",
           },
         });
+        navigate("/my-bookings");
       }
     } catch (err) {
       toast.error("Failed to book", {

@@ -87,10 +87,11 @@ export const getAllBookings = async (req, res, next) => {
     }
 
     const bookings = await Booking.find()
-      .sort({ createdAt: -1 })
-      .populate("userId", "name email")
-      .populate("roomId", "type price maxPeople")
-      .populate("hotelId", "name city address");
+      .select("userId roomId hotelId startDate endDate totalAmount status")
+      .populate("userId", "email")
+      .populate("roomId", "type -_id")
+      .populate("hotelId", "name city -_id")
+      .sort({ createdAt: -1 });
 
     return res.status(200).json({
       success: true,
@@ -107,8 +108,9 @@ export const getMyBookings = async (req, res, next) => {
     const userId = req.user.id;
 
     const bookings = await Booking.find({ userId })
-      .populate("roomId", "type price maxPeople")
-      .populate("hotelId", "name city address")
+      .select("roomId hotelId startDate endDate totalAmount status")
+      .populate("roomId", "type -_id")
+      .populate("hotelId", "name city -_id")
       .sort({ createdAt: -1 });
 
     return res.status(200).json({

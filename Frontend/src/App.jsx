@@ -14,10 +14,13 @@ import AdminHotels from "./pages/Admin/AdminHotels";
 import AdminRooms from "./pages/Admin/AdminRooms";
 import Rooms from "./pages/Rooms";
 import RoomDetail from "./pages/RoomDetail";
+import MyBooking from "./pages/MyBooking";
+import CarRental from "./pages/CarRental";
+import AdminBooking from "./pages/Admin/AllBookings";
 
 const App = () => {
   return (
-    <div>
+    <div className="bg-yellow-50">
       <div>
         <Toaster position="top-right" reverseOrder={false} />
       </div>
@@ -28,6 +31,8 @@ const App = () => {
           <Route path="/cities/:city" element={<CityHotelsPage />} />
           <Route path="/hotel/:hotelId/rooms" element={<Rooms />} />
           <Route path="/room-detail/:roomId" element={<RoomDetail />} />
+          <Route path="/my-bookings" element={<MyBooking />} />
+          <Route path="/car-rental" element={<CarRental />} />
           <Route path="/register" element={<Register />} />
           <Route path="/login" element={<Login />} />
           <Route path="/verify-login" element={<VerifyLogin />} />
@@ -37,6 +42,7 @@ const App = () => {
             <Route index element={<AdminHotels />} />
             <Route path="hotels/:hotelId/rooms" element={<AdminRooms />} />
           </Route>
+          <Route path="/all-booking" element={<AdminBooking />} />
         </Routes>
         <Footer />
       </BrowserRouter>

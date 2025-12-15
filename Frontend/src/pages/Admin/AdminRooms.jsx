@@ -166,7 +166,7 @@ const AdminRooms = () => {
   };
 
   return (
-    <div className=" bg-gray-50 min-h-screen">
+    <div className="min-h-screen">
       <div className="flex justify-between items-center mb-6">
         <button
           onClick={() => navigate(-1)}
@@ -174,12 +174,10 @@ const AdminRooms = () => {
         >
           <KeyboardBackspaceIcon className="text-blue-600" />
         </button>
-        <h1 className="text-xl md:text-2xl font-bold text-gray-800">
-          Manage Rooms
-        </h1>
+        <h1 className="text-2xl font-bold text-gray-800">Manage Rooms</h1>
         <button
           onClick={openCreateModal}
-          className="w-6 h-6 md:w-12 md:h-12 rounded-full bg-blue-600 text-white flex items-center justify-center text-2xl hover:bg-blue-700 shadow-md"
+          className="w-8 h-8 md:w-12 md:h-12 rounded-full bg-blue-600 text-white flex items-center justify-center text-2xl hover:bg-blue-700 shadow-md"
         >
           +
         </button>

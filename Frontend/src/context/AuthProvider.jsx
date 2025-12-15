@@ -9,6 +9,7 @@ const AuthProvider = ({ children }) => {
   const [verified, setVerified] = useState(false);
   const [role, setRole] = useState(null);
   const [accessToken, setAccessToken] = useState(null);
+  const [authLoading, setAuthLoading] = useState(true);
 
   useEffect(() => {
     const refreshTokenHandler = async () => {
@@ -32,6 +33,8 @@ const AuthProvider = ({ children }) => {
         } else {
           console.error("Error during refresh token check:", error);
         }
+      } finally {
+        setAuthLoading(false);
       }
     };
 
@@ -148,6 +151,7 @@ const AuthProvider = ({ children }) => {
           userId,
           accessToken,
           role,
+          authLoading
         }}
       >
         {children}

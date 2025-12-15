@@ -37,7 +37,7 @@ const HomePage = () => {
   };
 
   return (
-    <div className="bg-white">
+    <div>
       {/* Hero Section */}
       <section className="relative h-[70vh] md:h-screen flex items-center justify-center overflow-hidden">
         <img
@@ -159,7 +159,7 @@ const HomePage = () => {
       </section>
 
       {/* Featured Destinations */}
-      <section className="py-16 px-6 bg-white">
+      <section className="py-16 px-6">
         <div className="text-center mb-12">
           <h2 className="text-3xl md:text-4xl font-bold text-gray-800">
             Featured Destinations
