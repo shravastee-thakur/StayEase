@@ -9,6 +9,7 @@ import {
   deleteBooking,
   getAllBookings,
   getMyBookings,
+  stripePayment,
 } from "../controllers/BookingController.js";
 
 const router = express.Router();
@@ -22,7 +23,7 @@ router.get(
   checkRoomAvailability
 );
 router.put("/cancelBooking/:bookingId", authenticate, cancelBooking);
-// router.get("/getBookingById/:id", authenticate, getBookingById);
+router.post("/payment", authenticate, stripePayment);
 
 //admin
 router.get("/getAllBookings", authenticate, allowRole("admin"), getAllBookings);

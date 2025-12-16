@@ -3,6 +3,10 @@ import Hotel from "../models/HotelModel.js";
 import Room from "../models/RoomModel.js";
 import logger from "../utils/logger.js";
 import sanitize from "mongo-sanitize";
+import { Stripe } from "stripe";
+import transporter from "../config/sendMail.js";
+
+const stripe = Stripe(process.env.STRIPE_SECRET_KEY);
 
 export const createBooking = async (req, res, next) => {
   try {
@@ -123,43 +127,6 @@ export const getMyBookings = async (req, res, next) => {
   }
 };
 
-// export const getBookingById = async (req, res) => {
-//   try {
-//     const booking = await Booking.findById(req.params.id)
-//       .populate('userId', 'name email')
-//       .populate('roomId', 'type price maxPeople image description')
-//       .populate('hotelId', 'name city address image description rating');
-
-//     if (!booking) {
-//       return res.status(404).json({
-//         success: false,
-//         message: 'Booking not found'
-//       });
-//     }
-
-//     // Check if user is authorized to view this booking
-//     // (User can view their own booking, admin can view any)
-//     if (booking.userId._id.toString() !== req.user.id && !req.user.isAdmin) {
-//       return res.status(403).json({
-//         success: false,
-//         message: 'Not authorized to view this booking'
-//       });
-//     }
-
-//     res.status(200).json({
-//       success: true,
-//       data: booking
-//     });
-//   } catch (error) {
-//     console.error('Get booking by ID error:', error);
-//     res.status(500).json({
-//       success: false,
-//       message: 'Server error',
-//       error: error.message
-//     });
-//   }
-// };
-
 export const cancelBooking = async (req, res, next) => {
   try {
     const { bookingId } = req.params;
@@ -268,6 +235,73 @@ export const deleteBooking = async (req, res, next) => {
     });
   } catch (error) {
     logger.error(`Error in delete booking: ${error.message}`);
+    next(error);
+  }
+};
+
+export const stripePayment = async (req, res, next) => {
+  try {
+    const { bookingId } = req.body;
+
+    const booking = await Booking.findById(bookingId)
+      .select("userId hotelId totalAmount startDate")
+      .populate("userId", "username email -_id")
+      .populate("hotelId", "name city -_id");
+    if (!booking) {
+      return res
+        .status(404)
+        .json({ success: false, message: "Booking not found" });
+    }
+
+    const amountToCharge = booking.totalAmount;
+
+    const session = await stripe.checkout.sessions.create({
+      mode: "payment",
+      line_items: [
+        {
+          price_data: {
+            currency: "inr",
+            product_data: {
+              name: booking.hotelId.name,
+            },
+            unit_amount: amountToCharge * 100,
+          },
+          quantity: 1,
+        },
+      ],
+
+      success_url: `${process.env.FRONTEND_URL}/payment-success`,
+      cancel_url: `${process.env.FRONTEND_URL}/payment-failure`,
+    });
+
+    await booking.updateOne({ status: "confirmed" });
+
+    const mailOption = {
+      from: process.env.SENDER_EMAIL,
+      to: booking.userId.email,
+      subject: "Hotel Booking Details",
+      html: `
+            <h2>Booking Details</h2>
+            <p>Dear ${booking.userId.username},</p>
+            <p>Thankyou for availing our service.</p>
+            <ul>
+              <li><strong>Booking ID: </strong>${bookingId}</li>
+              <li><strong>Hotel Name: </strong>${booking.hotelId.name}</li>
+              <li><strong>Location: </strong>${booking.hotelId.city}</li>
+              <li><strong>Date: </strong>${booking.startDate.toLocaleDateString(
+                "en-GB"
+              )}</li>
+              <li><strong>Total Amount: </strong>₹ ${booking.totalAmount.toLocaleString()}</li>
+            </ul>
+            <p>We look forward to welcome you.</p>
+          `,
+    };
+
+    await transporter.sendMail(mailOption);
+
+    res.json({ success: true, url: session.url });
+  } catch (error) {
+    logger.error(`Error in stripe payment: ${error.message}`);
     next(error);
   }
 };

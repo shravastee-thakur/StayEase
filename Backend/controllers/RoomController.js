@@ -55,7 +55,6 @@ export const createRoom = async (req, res, next) => {
 export const getRoombyId = async (req, res, next) => {
   try {
     const { roomId } = req.params;
-    console.log(roomId);
 
     const room = await Room.findById(roomId).populate("hotelId", "name city");
     if (!room) {

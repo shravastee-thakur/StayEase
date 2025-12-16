@@ -17,6 +17,9 @@ import RoomDetail from "./pages/RoomDetail";
 import MyBooking from "./pages/MyBooking";
 import CarRental from "./pages/CarRental";
 import AdminBooking from "./pages/Admin/AllBookings";
+import PaymentSuccess from "./pages/payment/PaymentSuccess";
+// import Paymentpage from "./pages/payment/Paymentpage";
+import PaymentFailure from "./pages/payment/PaymentFailure";
 
 const App = () => {
   return (
@@ -43,6 +46,8 @@ const App = () => {
             <Route path="hotels/:hotelId/rooms" element={<AdminRooms />} />
           </Route>
           <Route path="/all-booking" element={<AdminBooking />} />
+          <Route path="/payment-success" element={<PaymentSuccess />} />
+          <Route path="/payment-failure" element={<PaymentFailure />} />
         </Routes>
         <Footer />
       </BrowserRouter>

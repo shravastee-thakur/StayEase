@@ -1,13 +1,15 @@
+import dotenv from "dotenv";
+dotenv.config();
+
 import express from "express";
 import cors from "cors";
 import cookieParser from "cookie-parser";
 import helmet from "helmet";
 import connectdb from "./config/connectdb.js";
-import dotenv from "dotenv";
-import logger from "./utils/logger.js";
-dotenv.config();
-import { errorHandler } from "./middlewares/errorMiddleware.js";
 
+import logger from "./utils/logger.js";
+
+import { errorHandler } from "./middlewares/errorMiddleware.js";
 import userRoute from "./routes/UserRoutes.js";
 import hotelRoute from "./routes/HotelRoutes.js";
 import roomRoute from "./routes/RoomRoutes.js";
@@ -52,6 +54,7 @@ app.use((req, res, next) => {
 });
 
 app.use(errorHandler);
+
 app.listen(PORT, () => {
   logger.info(`Server is running on port: http://localhost:${PORT}`);
 });

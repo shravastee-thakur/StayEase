@@ -79,7 +79,42 @@ const MyBooking = () => {
         alert(res.data.message);
       }
     } catch (error) {
-      console.error("User delete failed", error);
+      console.log(error);
+      toast.error("Failed to delete booking", {
+        style: {
+          borderRadius: "10px",
+          background: "#FFB5B5",
+          color: "#333",
+        },
+      });
+    }
+  };
+
+  const handlePay = async (bookingId) => {
+    try {
+      const res = await axios.post(
+        "http://localhost:8000/api/v1/bookings/payment",
+        { bookingId },
+        {
+          headers: {
+            Authorization: `Bearer ${accessToken}`,
+          },
+          withCredentials: true,
+        }
+      );
+      if (res.data.success) {
+        const checkoutUrl = res.data.url;
+        window.location.href = checkoutUrl;
+      }
+    } catch (error) {
+      console.log(error);
+      toast.error("Failed to pay", {
+        style: {
+          borderRadius: "10px",
+          background: "#FFB5B5",
+          color: "#333",
+        },
+      });
     }
   };
 
@@ -104,6 +139,7 @@ const MyBooking = () => {
                     <TableCell align="center">Total Amount</TableCell>
                     <TableCell align="center">Status</TableCell>
                     <TableCell align="center">Action</TableCell>
+                    <TableCell align="center">Pay</TableCell>
                   </TableRow>
                 </TableHead>
                 <TableBody>
@@ -144,6 +180,19 @@ const MyBooking = () => {
                           onClick={() => handleCancel(booking._id)}
                         >
                           Cancel
+                        </button>
+                      </TableCell>
+                      <TableCell align="center">
+                        <button
+                          disabled={booking.status === "confirmed"}
+                          onClick={() => handlePay(booking._id)}
+                          className={`px-3 py-1 rounded text-white ${
+                            booking.status === "confirmed"
+                              ? "bg-gray-500 cursor-not-allowed"
+                              : "bg-green-600"
+                          }`}
+                        >
+                          Pay
                         </button>
                       </TableCell>
                     </TableRow>

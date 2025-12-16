@@ -1,0 +1,54 @@
+import { useEffect } from "react";
+import { useNavigate } from "react-router-dom";
+
+const PaymentSuccess = () => {
+  const navigate = useNavigate();
+
+  useEffect(() => {
+    const timer = setTimeout(() => {
+      navigate("/my-bookings");
+    }, 5000);
+    return () => clearTimeout(timer);
+  }, [navigate]);
+
+  return (
+    <div className="min-h-screen flex flex-col items-center justify-center p-4">
+      <div className="max-w-md w-full bg-white rounded-xl shadow-md p-8 text-center">
+        <div className="w-16 h-16 bg-green-100 rounded-full flex items-center justify-center mx-auto mb-6">
+          <svg
+            className="w-8 h-8 text-green-600"
+            fill="none"
+            stroke="currentColor"
+            viewBox="0 0 24 24"
+            xmlns="http://www.w3.org/2000/svg"
+          >
+            <path
+              strokeLinecap="round"
+              strokeLinejoin="round"
+              strokeWidth={2}
+              d="M5 13l4 4L19 7"
+            />
+          </svg>
+        </div>
+        <h1 className="text-2xl font-bold text-gray-800 mb-2">
+          Payment Successful!
+        </h1>
+        <p className="text-gray-600 mb-6">
+          Thank you for your booking. Your payment has been processed
+          successfully.
+        </p>
+        <div className="bg-green-50 border border-green-200 rounded-lg p-4 mb-6 text-green-800 text-sm">
+          A confirmation email has been sent to your inbox.
+        </div>
+        {/* <button
+          onClick={() => navigate("/bookings")}
+          className="w-full py-3 px-4 bg-[#2f7003] hover:bg-[#255a02] text-white font-medium rounded-lg transition duration-200 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-[#2f7003]"
+        >
+          View My Bookings
+        </button> */}
+      </div>
+    </div>
+  );
+};
+
+export default PaymentSuccess;
