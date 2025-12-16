@@ -1,3 +1,13 @@
+
+<img width="1263" height="595" alt="StayEase1" src="https://github.com/user-attachments/assets/3d86c606-bf05-4238-9bf6-aa9019f72f4f" />
+
+
+<img width="1259" height="591" alt="StayEase2" src="https://github.com/user-attachments/assets/d70d8f9f-e0d7-49dd-a979-3ec0296838be" />
+
+
+<img width="1263" height="591" alt="StayEase3" src="https://github.com/user-attachments/assets/e58715b0-b202-4020-8f0b-00011c744cd8" />
+
+
 # StayEase - Hotel Booking System
 
 A MERN (MongoDB, Express.js, React, Node.js) based Hotel Booking website that provides functionality for hotel management, room booking, and payment processing. This project includes features like date concurrency, two-factor authentication (2FA), rate limiting with Redis, role-based access control (RBAC), and payment integration using Stripe.
