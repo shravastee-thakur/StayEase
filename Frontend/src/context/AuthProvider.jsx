@@ -29,7 +29,6 @@ const AuthProvider = ({ children }) => {
         }
       } catch (error) {
         if (error.response && error.response.status === 401) {
-          // Do nothing, user not logged in
         } else {
           console.error("Error during refresh token check:", error);
         }
@@ -106,6 +105,14 @@ const AuthProvider = ({ children }) => {
       }
     } catch (error) {
       console.log(error);
+      toast.error("Invalid otp", {
+        style: {
+          borderRadius: "10px",
+          background: "#FFB5B5",
+          color: "#333",
+        },
+      });
+      return false;
     }
   };
 
@@ -129,14 +136,22 @@ const AuthProvider = ({ children }) => {
         toast.success(res.data.message, {
           style: {
             borderRadius: "10px",
-            background: "#C5FF95",
-            color: "#333",
+            background: "#333",
+            color: "#fff",
           },
         });
         return true;
       }
     } catch (error) {
       console.log(error);
+      toast.error("Failed to logout", {
+        style: {
+          borderRadius: "10px",
+          background: "#FFB5B5",
+          color: "#333",
+        },
+      });
+      return false;
     }
   };
 
@@ -151,7 +166,7 @@ const AuthProvider = ({ children }) => {
           userId,
           accessToken,
           role,
-          authLoading
+          authLoading,
         }}
       >
         {children}

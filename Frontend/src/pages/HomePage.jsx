@@ -30,10 +30,12 @@ const HomePage = () => {
     }).toString();
 
     navigate(`/cities/${destination}?${queryParams}`);
+    window.scrollTo(0, 0);
   };
 
   const handleFeaturedDestination = (citySlug) => {
     navigate(`/cities/${citySlug}`);
+    window.scrollTo(0, 0);
   };
 
   return (
@@ -144,7 +146,7 @@ const HomePage = () => {
                 </div>
 
                 {/* Search Button */}
-                <div className="flex items-end">
+                <div className="flex items-end mb-1">
                   <button
                     type="submit"
                     className="w-full bg-[#2f7003] hover:bg-[#255a02] text-white font-medium py-2 rounded transition-colors"

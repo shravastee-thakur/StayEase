@@ -87,13 +87,26 @@ const MyBooking = () => {
     <>
       {verified ? (
         <div className="admin-container flex flex-col items-center justify-center px-2 py-4 mt-10">
-          <div className=" w-full max-w-full md:max-w-[85%] lg:max-w-[70%] overflow-x-auto">
+          <div className=" w-full max-w-full md:max-w-[85%] lg:max-w-[90%] overflow-x-auto">
             <h2 className="text-xl md:text-2xl font-bold text-center mb-4">
               All Bookings
             </h2>
 
-            <TableContainer component={Paper}>
-              <Table sx={{ minWidth: 650 }} aria-label="simple table">
+            <TableContainer
+              component={Paper}
+              sx={{
+                overflowX: "auto",
+                maxWidth: "100%",
+                "&::-webkit-scrollbar": {
+                  height: "8px",
+                },
+                "&::-webkit-scrollbar-thumb": {
+                  backgroundColor: "#ccc",
+                  borderRadius: "4px",
+                },
+              }}
+            >
+              <Table sx={{ minWidth: "900px" }} aria-label="simple table">
                 <TableHead>
                   <TableRow className="bg-[#E7F0DC] ">
                     <TableCell align="center">Email</TableCell>

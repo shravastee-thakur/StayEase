@@ -76,6 +76,7 @@ const CityHotelsPage = () => {
         ? `/hotel/${hotelId}/rooms?${queryString}`
         : `/hotel/${hotelId}/rooms`
     );
+    window.scrollTo(0, 0);
   };
 
   if (error) {

@@ -22,7 +22,7 @@ const ResetPassword = () => {
     setIsSubmitting(true);
     try {
       const res = await axios.post(
-        "http://localhost:8000/api/v1/user/resetPassword",
+        "http://localhost:8000/api/v1/users/resetPassword",
         { userId, token, newPassword },
         {
           withCredentials: true,
@@ -33,8 +33,8 @@ const ResetPassword = () => {
         toast.success(res.data.message, {
           style: {
             borderRadius: "10px",
-            background: "#C5FF95",
-            color: "#333",
+            background: "#333",
+            color: "#fff",
           },
         });
 
@@ -42,6 +42,13 @@ const ResetPassword = () => {
       }
     } catch (error) {
       console.log(error);
+      toast.error("Failed to reset password", {
+        style: {
+          borderRadius: "10px",
+          background: "#FFB5B5",
+          color: "#333",
+        },
+      });
     }
   };
 

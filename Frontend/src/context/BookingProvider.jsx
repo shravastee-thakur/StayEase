@@ -28,7 +28,6 @@ const BookingProvider = ({ children }) => {
             color: "#fff",
           },
         });
-        
       }
     } catch (error) {
       console.log(error);

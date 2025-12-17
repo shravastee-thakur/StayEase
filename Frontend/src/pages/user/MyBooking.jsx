@@ -7,8 +7,8 @@ import TableHead from "@mui/material/TableHead";
 import TableRow from "@mui/material/TableRow";
 import Paper from "@mui/material/Paper";
 import { useContext, useEffect, useState } from "react";
-import { AuthContext } from "../context/AuthProvider";
 import toast from "react-hot-toast";
+import { AuthContext } from "../../context/AuthProvider";
 
 const MyBooking = () => {
   const [myBooking, setMyBooking] = useState([]);
@@ -80,7 +80,7 @@ const MyBooking = () => {
       }
     } catch (error) {
       console.log(error);
-      toast.error("Failed to delete booking", {
+      toast.error("Failed to cancel booking", {
         style: {
           borderRadius: "10px",
           background: "#FFB5B5",
@@ -122,13 +122,26 @@ const MyBooking = () => {
     <>
       {verified ? (
         <div className="admin-container flex flex-col items-center justify-center px-2 py-4 mt-10">
-          <div className=" w-full max-w-full md:max-w-[85%] lg:max-w-[70%] overflow-x-auto">
+          <div className=" w-full max-w-full md:max-w-[85%] lg:max-w-[90%] overflow-x-auto">
             <h2 className="text-xl md:text-2xl font-bold text-center mb-4">
               My Bookings
             </h2>
 
-            <TableContainer component={Paper}>
-              <Table sx={{ minWidth: 650 }} aria-label="simple table">
+            <TableContainer
+              component={Paper}
+              sx={{
+                overflowX: "auto",
+                maxWidth: "100%",
+                "&::-webkit-scrollbar": {
+                  height: "8px",
+                },
+                "&::-webkit-scrollbar-thumb": {
+                  backgroundColor: "#ccc",
+                  borderRadius: "4px",
+                },
+              }}
+            >
+              <Table sx={{ minWidth: "900px" }} aria-label="simple table">
                 <TableHead>
                   <TableRow className="bg-[#E7F0DC] ">
                     <TableCell align="center">Hotel</TableCell>
@@ -171,11 +184,15 @@ const MyBooking = () => {
                       <TableCell align="center">{booking.status}</TableCell>
                       <TableCell align="center">
                         <button
-                          disabled={booking.status === "cancelled"}
+                          disabled={
+                            booking.status === "cancelled" ||
+                            booking.status === "confirmed"
+                          }
                           className={`px-3 py-1 rounded text-white ${
-                            booking.status === "cancelled"
+                            booking.status === "cancelled" ||
+                            booking.status === "confirmed"
                               ? "bg-gray-500 cursor-not-allowed"
-                              : "bg-red-500"
+                              : "bg-red-500 hover:bg-red-600 cursor-pointer"
                           }`}
                           onClick={() => handleCancel(booking._id)}
                         >

@@ -8,12 +8,8 @@ export const RoomContext = createContext();
 
 const RoomProvider = ({ children }) => {
   const { accessToken } = useContext(AuthContext);
-  const { hotelId } = useContext(HotelContext);
 
   const createRoom = async (formdata) => {
-    console.log("hotelId", hotelId);
-    console.log("formdata", formdata);
-
     try {
       const res = await axios.post(
         "http://localhost:8000/api/v1/rooms/createRoom",
@@ -116,8 +112,8 @@ const RoomProvider = ({ children }) => {
       toast.error("Failed to delete room", {
         style: {
           borderRadius: "10px",
-          background: "#333",
-          color: "#fff",
+          background: "#FFB5B5",
+          color: "#333",
         },
       });
       return false;

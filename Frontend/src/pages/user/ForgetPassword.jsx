@@ -11,7 +11,7 @@ const Forgetpassword = () => {
     e.preventDefault();
     try {
       const res = await axios.post(
-        "http://localhost:8000/api/v1/user/forgetPassword",
+        "http://localhost:8000/api/v1/users/forgetPassword",
         { email },
         {
           withCredentials: true,
@@ -22,15 +22,21 @@ const Forgetpassword = () => {
         toast.success(res.data.message, {
           style: {
             borderRadius: "10px",
-            background: "#C5FF95",
-            color: "#333",
+            background: "#333",
+            color: "#fff",
           },
         });
         navigate("/reset-password");
       }
     } catch (error) {
       console.log(error);
-      toast.error(error);
+      toast.error("Failed to send reset link", {
+        style: {
+          borderRadius: "10px",
+          background: "#FFB5B5",
+          color: "#333",
+        },
+      });
     }
   };
   return (

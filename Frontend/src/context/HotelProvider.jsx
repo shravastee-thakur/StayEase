@@ -88,8 +88,6 @@ const HotelProvider = ({ children }) => {
   };
 
   const deleteHotel = async (id) => {
-    console.log(id);
-
     try {
       const res = await axios.delete(
         `http://localhost:8000/api/v1/hotels/deleteHotel/${id}`,
@@ -115,8 +113,8 @@ const HotelProvider = ({ children }) => {
       toast.error("Failed to delete hotel", {
         style: {
           borderRadius: "10px",
-          background: "#333",
-          color: "#fff",
+          background: "#FFB5B5",
+          color: "#333",
         },
       });
       return false;

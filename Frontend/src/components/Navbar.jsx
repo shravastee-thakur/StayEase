@@ -1,6 +1,8 @@
 import { useContext, useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { AuthContext } from "../context/AuthProvider";
+import MenuIcon from "@mui/icons-material/Menu";
+import ClearIcon from "@mui/icons-material/Clear";
 
 const Navbar = () => {
   const navigate = useNavigate();
@@ -12,6 +14,7 @@ const Navbar = () => {
 
     if (success) {
       navigate("/");
+      window.scrollTo(0, 0);
     }
   };
 
@@ -74,37 +77,36 @@ const Navbar = () => {
             aria-label="Toggle navigation menu"
           >
             {/* Hamburger icon (three lines) */}
-            <svg
-              xmlns="http://www.w3.org/2000/svg"
-              className="h-6 w-6"
-              fill="none"
-              viewBox="0 0 24 24"
-              stroke="currentColor"
-            >
-              <path
-                strokeLinecap="round"
-                strokeLinejoin="round"
-                strokeWidth={2}
-                d={
-                  isMenuOpen
-                    ? "M6 18L18 6M6 6l12 12"
-                    : "M4 6h16M4 12h16M4 18h16"
-                }
-              />
-            </svg>
+
+            {isMenuOpen ? <ClearIcon /> : <MenuIcon />}
           </button>
         </nav>
       </div>
 
       {/* Mobile Menu - Slides in from the right */}
       <div
-        className={`md:hidden bg-[#05339C] z-50 px-4 pb-4 pt-2 mt-16 flex flex-col gap-3 fixed top-0 right-0 w-1/2 h-1/2 transform transition-transform ${
+        className={`md:hidden bg-[#44a206] z-50 px-4 pb-4 pt-2 mt-16 flex flex-col gap-3 fixed top-0 right-0 w-1/2 h-1/2 transform transition-transform ${
           isMenuOpen ? "translate-x-0" : "translate-x-full"
         }`}
         style={{ transitionDuration: "300ms" }}
       >
-        <p className="cursor-pointer text-white text-base">Hotels</p>
-        <p className="cursor-pointer text-white text-base">Car Rental</p>
+        {role === "admin" ? (
+          <p className="cursor-pointer text-white text-base">
+            <Link to={"/all-booking"}> All Bookings</Link>
+          </p>
+        ) : (
+          <p className="cursor-pointer text-white text-base">
+            <Link to={"/my-bookings"}> My Bookings</Link>
+          </p>
+        )}
+        <p className="cursor-pointer text-white text-base">
+          <Link to={"/car-rental"}>Car Rental</Link>
+        </p>
+        {verified && role === "admin" && (
+          <p className="cursor-pointer text-white text-base">
+            <Link to={"/admin"}>Admin</Link>
+          </p>
+        )}
 
         {verified ? (
           <p

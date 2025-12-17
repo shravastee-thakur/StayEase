@@ -56,6 +56,7 @@ const Rooms = () => {
         ? `/room-detail/${roomId}?${queryString}`
         : `/room-detail/${roomId}`
     );
+    window.scrollTo(0, 0);
   };
 
   if (error) {
