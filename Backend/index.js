@@ -18,6 +18,8 @@ import bookingRoute from "./routes/BookingRoute.js";
 const app = express();
 connectdb();
 
+
+
 const PORT = process.env.PORT || 5000;
 
 // Middlewares
