@@ -26,7 +26,7 @@ const Register = () => {
     e.preventDefault();
     try {
       const res = await axios.post(
-        "https://stay-ease-puce-one.vercel.app/api/v1/user/register",
+        "https://stay-ease-puce-one.vercel.app/api/v1/users/register",
         formData,
         {
           headers: {
