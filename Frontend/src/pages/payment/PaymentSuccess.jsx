@@ -28,12 +28,7 @@ const PaymentSuccess = () => {
         <div className="bg-green-50 border border-green-200 rounded-lg p-4 mb-6 text-green-800 text-sm">
           A confirmation email has been sent to your inbox.
         </div>
-        {/* <button
-          onClick={() => navigate("/bookings")}
-          className="w-full py-3 px-4 bg-[#2f7003] hover:bg-[#255a02] text-white font-medium rounded-lg transition duration-200 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-[#2f7003]"
-        >
-          View My Bookings
-        </button> */}
+        
       </div>
     </div>
   );

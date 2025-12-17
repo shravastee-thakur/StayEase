@@ -56,7 +56,7 @@ const MyBooking = () => {
   const handleCancel = async (bookingId) => {
     try {
       const res = await axios.put(
-        `http://localhost:8000/api/v1/bookings/cancelBooking/${bookingId}`,
+        `https://stay-ease-puce-one.vercel.app/api/v1/bookings/cancelBooking/${bookingId}`,
         {},
         {
           headers: {
@@ -93,7 +93,7 @@ const MyBooking = () => {
   const handlePay = async (bookingId) => {
     try {
       const res = await axios.post(
-        "http://localhost:8000/api/v1/bookings/payment",
+        "https://stay-ease-puce-one.vercel.app/api/v1/bookings/payment",
         { bookingId },
         {
           headers: {

@@ -22,7 +22,7 @@ const ResetPassword = () => {
     setIsSubmitting(true);
     try {
       const res = await axios.post(
-        "http://localhost:8000/api/v1/users/resetPassword",
+        "https://stay-ease-puce-one.vercel.app/api/v1/users/resetPassword",
         { userId, token, newPassword },
         {
           withCredentials: true,

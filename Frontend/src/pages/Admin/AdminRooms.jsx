@@ -114,7 +114,7 @@ const AdminRooms = () => {
         console.log("currentRoom", currentRoom._id);
 
         await axios.put(
-          `http://localhost:8000/api/v1/rooms/updateRoom/${currentRoom._id}`,
+          `https://stay-ease-puce-one.vercel.app/api/v1/rooms/updateRoom/${currentRoom._id}`,
           data,
           {
             headers: {

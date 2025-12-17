@@ -11,7 +11,7 @@ const HotelProvider = ({ children }) => {
   const createHotel = async (formData) => {
     try {
       const res = await axios.post(
-        "http://localhost:8000/api/v1/hotels/createHotel",
+        "https://stay-ease-puce-one.vercel.app/api/v1/hotels/createHotel",
         formData,
         {
           headers: {
@@ -48,7 +48,7 @@ const HotelProvider = ({ children }) => {
   const fetchHotels = async () => {
     try {
       const res = await axios.get(
-        "http://localhost:8000/api/v1/hotels/getHotels",
+        "https://stay-ease-puce-one.vercel.app/api/v1/hotels/getHotels",
         {
           headers: {
             "Content-Type": "application/json",
@@ -69,7 +69,7 @@ const HotelProvider = ({ children }) => {
   const fetchHotelById = async (id) => {
     try {
       const res = await axios.get(
-        `http://localhost:8000/api/v1/hotels/getHotelById/${id}`,
+        `https://stay-ease-puce-one.vercel.app/api/v1/hotels/getHotelById/${id}`,
         {
           headers: {
             "Content-Type": "application/json",
@@ -90,7 +90,7 @@ const HotelProvider = ({ children }) => {
   const deleteHotel = async (id) => {
     try {
       const res = await axios.delete(
-        `http://localhost:8000/api/v1/hotels/deleteHotel/${id}`,
+        `https://stay-ease-puce-one.vercel.app/api/v1/hotels/deleteHotel/${id}`,
         {
           headers: {
             Authorization: `Bearer ${accessToken}`,
