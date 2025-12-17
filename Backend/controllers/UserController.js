@@ -179,7 +179,16 @@ export const refreshHandler = async (req, res, next) => {
 
     const decoded = verifyRefreshToken(refreshToken);
 
-    const user = await User.findOne({ _id: decoded.id, refreshToken });
+    if (Date.now() >= decoded.exp * 1000) {
+      return res.status(403).json({
+        message: "Refresh token expired",
+      });
+    }
+
+    const user = await User.findById(decoded.id)
+      .select("username email role isVerified refreshToken")
+      .maxTimeMS(3000)
+      .lean();
     if (!user) {
       return res
         .status(403)

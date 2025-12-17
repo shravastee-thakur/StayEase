@@ -20,7 +20,6 @@ import mongoose from "mongoose";
 import dotenv from "dotenv";
 dotenv.config();
 
-// Check if a cached connection already exists
 let cached = global.mongoose;
 
 if (!cached) {
@@ -28,19 +27,17 @@ if (!cached) {
 }
 
 const connectDB = async () => {
-  // If a connection already exists, return it immediately
   if (cached.conn) {
     return cached.conn;
   }
 
-  // If no connection promise is in progress, create one
   if (!cached.promise) {
     const opts = {
-      bufferCommands: false, // Important: Fail fast if no connection
+      bufferCommands: false,
       maxPoolSize: 10,
-      serverSelectionTimeoutMS: 10000, // Time to find a server
-      socketTimeoutMS: 45000, // Time a socket can stay idle
-      family: 4, // Use IPv4, skip IPv6
+      serverSelectionTimeoutMS: 10000,
+      socketTimeoutMS: 45000,
+      family: 4,
     };
 
     cached.promise = mongoose
