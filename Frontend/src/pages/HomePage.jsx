@@ -1,5 +1,5 @@
 import { useNavigate } from "react-router-dom";
-import CoreFeatures from "../components/Corefeatures";
+import CoreFeatures from "../components/CoreFeatures";
 import { useState } from "react";
 
 const HomePage = () => {
