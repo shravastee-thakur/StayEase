@@ -3,7 +3,7 @@ import User from "../models/UserModel.js";
 import logger from "../utils/logger.js";
 import { rateLimit } from "../utils/rateLimit.js";
 import { deleteOtp, getOtp, saveOtp } from "../utils/otp.js";
-import transporter from "../config/sendMail.js";
+// import transporter from "../config/sendMail.js";
 import {
   generateAccessToken,
   generateRefreshToken,
@@ -15,6 +15,7 @@ import {
   getResetToken,
   saveResetToken,
 } from "../utils/resetToken.js";
+import { sendOtpEmail } from "../config/sendMail.js";
 
 export const register = async (req, res, next) => {
   try {
@@ -70,23 +71,25 @@ export const loginStepOne = async (req, res, next) => {
 
     const otp = String(Math.floor(100000 + Math.random() * 900000));
 
-    console.log("Saving OTP in Redis...");
     await saveOtp(email, otp);
-    console.log("OTP saved in Redis.");
 
-    const mailOption = {
-      from: process.env.SENDER_EMAIL,
-      to: user.email,
-      subject: "Your 2FA Login OTP",
-      html: `
-        <p>Login Verification</p>
-        <p>Your OTP for login is:</p>
-        <h2><strong>${otp}</strong></h2>
-        <p>This OTP will expire in 5 minutes.</p>
-      `,
-    };
+    // const mailOption = {
+    //   from: process.env.SENDER_EMAIL,
+    //   to: user.email,
+    //   subject: "Your 2FA Login OTP",
+    //   html: `
+    //     <p>Login Verification</p>
+    //     <p>Your OTP for login is:</p>
+    //     <h2><strong>${otp}</strong></h2>
+    //     <p>This OTP will expire in 5 minutes.</p>
+    //   `,
+    // };
 
-    await transporter.sendMail(mailOption);
+    // await transporter.sendMail(mailOption);
+
+
+     await sendOtpEmail(user.email, otp);
+
 
     return res.status(200).json({
       success: true,
