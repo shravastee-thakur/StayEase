@@ -69,7 +69,10 @@ export const loginStepOne = async (req, res, next) => {
     const user = await User.login(email, password);
 
     const otp = String(Math.floor(100000 + Math.random() * 900000));
+
+    console.log("Saving OTP in Redis...");
     await saveOtp(email, otp);
+    console.log("OTP saved in Redis.");
 
     const mailOption = {
       from: process.env.SENDER_EMAIL,
