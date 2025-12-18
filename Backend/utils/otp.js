@@ -12,3 +12,10 @@ export const deleteOtp = async (email) => {
   return await redis.del(`otp:${email}`);
 };
 
+redis.on("connect", () => {
+  console.log("Redis is connected");
+});
+
+redis.on("error", (err) => {
+  console.error("Redis connection error:", err);
+});
