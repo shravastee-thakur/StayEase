@@ -14,7 +14,6 @@ import userRoute from "./routes/UserRoutes.js";
 import hotelRoute from "./routes/HotelRoutes.js";
 import roomRoute from "./routes/RoomRoutes.js";
 import bookingRoute from "./routes/BookingRoute.js";
-import { redis } from "./config/redis.js";
 
 const app = express();
 connectdb();
@@ -26,7 +25,7 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 app.use(
   cors({
-    origin: "https://shra-stayease.netlify.app",
+    origin: process.env.FRONTEND_URL,
     credentials: true,
   })
 );
@@ -36,32 +35,6 @@ app.use(
     crossOriginResourcePolicy: { policy: "cross-origin" },
   })
 );
-
-import { Resend } from "resend";
-import dotenv from "dotenv";
-dotenv.config();
-
-export const resend = new Resend(process.env.RESEND_API_KEY);
-
-app.get("/test-email", async (req, res) => {
-  try {
-    console.log("🧪 Testing Resend directly...");
-    const testEmail = "shratestcode@gmail.com"; // ← YOUR email
-
-    const response = await resend.emails.send({
-      from: "onboarding@resend.dev",
-      to: [testEmail],
-      subject: "Render Test Email",
-      html: "<h1>Render + Resend is working!</h1>",
-    });
-
-    console.log("✅ Test email sent:", response.data?.id);
-    return res.json({ ok: true, id: response.data?.id });
-  } catch (err) {
-    console.error("❌ Test email failed:", err);
-    return res.status(500).json({ error: err.message });
-  }
-});
 
 // Routes
 app.use("/api/v1/users", userRoute);

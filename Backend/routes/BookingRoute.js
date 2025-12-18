@@ -16,11 +16,7 @@ const router = express.Router();
 // user
 router.post("/createBooking", authenticate, createBooking);
 router.get("/getMyBookings", authenticate, getMyBookings);
-router.get(
-  "/checkRoomAvailability/:roomId",
-  authenticate,
-  checkRoomAvailability
-);
+router.get("/checkRoomAvailability/:roomId", checkRoomAvailability);
 router.put("/cancelBooking/:bookingId", authenticate, cancelBooking);
 router.post("/payment", authenticate, stripePayment);
 

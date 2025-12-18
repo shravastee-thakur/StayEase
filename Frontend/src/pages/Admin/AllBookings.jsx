@@ -24,7 +24,7 @@ const MyBooking = () => {
     const getMyBooking = async () => {
       try {
         const res = await axios.get(
-          "https://stayease-yu78.onrender.com/api/v1/bookings/getAllBookings",
+          "http://localhost:8000/api/v1/bookings/getAllBookings",
           {
             headers: {
               Authorization: `Bearer ${accessToken}`,
@@ -58,7 +58,7 @@ const MyBooking = () => {
 
     try {
       const res = await axios.delete(
-        `https://stayease-yu78.onrender.com/api/v1/bookings/deleteBooking/${bookingId}`,
+        `http://localhost:8000/api/v1/bookings/deleteBooking/${bookingId}`,
         {
           headers: {
             Authorization: `Bearer ${accessToken}`,

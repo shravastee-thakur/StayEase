@@ -22,7 +22,7 @@ const ResetPassword = () => {
     setIsSubmitting(true);
     try {
       const res = await axios.post(
-        "https://stayease-yu78.onrender.com/api/v1/users/resetPassword",
+        "http://localhost:8000/api/v1/users/resetPassword",
         { userId, token, newPassword },
         {
           withCredentials: true,

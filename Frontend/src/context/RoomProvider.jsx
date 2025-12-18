@@ -1,7 +1,6 @@
 import { createContext, useContext } from "react";
 import axios from "axios";
 import { AuthContext } from "./AuthProvider";
-import { HotelContext } from "./HotelProvider";
 import toast from "react-hot-toast";
 
 export const RoomContext = createContext();
@@ -12,7 +11,7 @@ const RoomProvider = ({ children }) => {
   const createRoom = async (formdata) => {
     try {
       const res = await axios.post(
-        "https://stayease-yu78.onrender.com/api/v1/rooms/createRoom",
+        "http://localhost:8000/api/v1/rooms/createRoom",
         formdata,
         {
           headers: {
@@ -49,7 +48,7 @@ const RoomProvider = ({ children }) => {
   const fetchRooms = async (hotelId) => {
     try {
       const res = await axios.get(
-        `https://stayease-yu78.onrender.com/api/v1/hotels/getHotelRooms/${hotelId}/rooms`,
+        `http://localhost:8000/api/v1/hotels/getHotelRooms/${hotelId}/rooms`,
         {
           headers: {
             "Content-Type": "application/json",
@@ -69,7 +68,7 @@ const RoomProvider = ({ children }) => {
   const getRoomById = async (roomId) => {
     try {
       const res = await axios.get(
-        `https://stayease-yu78.onrender.com/api/v1/rooms/getRoomById/${roomId}`,
+        `http://localhost:8000/api/v1/rooms/getRoomById/${roomId}`,
         {
           headers: {
             "Content-Type": "application/json",
@@ -89,7 +88,7 @@ const RoomProvider = ({ children }) => {
   const deleteRoom = async (id) => {
     try {
       const res = await axios.delete(
-        `https://stayease-yu78.onrender.com/api/v1/rooms/deleteRoom/${id}`,
+        `http://localhost:8000/api/v1/rooms/deleteRoom/${id}`,
         {
           headers: {
             Authorization: `Bearer ${accessToken}`,

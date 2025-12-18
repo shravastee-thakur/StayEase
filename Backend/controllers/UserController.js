@@ -3,7 +3,6 @@ import User from "../models/UserModel.js";
 import logger from "../utils/logger.js";
 import { rateLimit } from "../utils/rateLimit.js";
 import { deleteOtp, getOtp, saveOtp } from "../utils/otp.js";
-// import transporter from "../config/sendMail.js";
 import {
   generateAccessToken,
   generateRefreshToken,
@@ -15,14 +14,7 @@ import {
   getResetToken,
   saveResetToken,
 } from "../utils/resetToken.js";
-// import { sendOtpEmail, sendResetPasswordEmail } from "../config/sendMail.js";
-
-import { Resend } from "resend";
-import dotenv from "dotenv";
-dotenv.config();
-
-export const resend = new Resend(process.env.RESEND_API_KEY);
-console.log("SENDER_EMAIL:", process.env.SENDER_EMAIL);
+import sendMail from "../config/sendMail.js";
 
 export const register = async (req, res, next) => {
   try {
@@ -78,37 +70,16 @@ export const loginStepOne = async (req, res, next) => {
 
     const otp = String(Math.floor(100000 + Math.random() * 900000));
 
-    console.log("Saving OTP in Redis...");
     await saveOtp(email, otp);
-    console.log("OTP saved in Redis.");
 
-    // const mailOption = {
-    //   from: process.env.SENDER_EMAIL,
-    //   to: user.email,
-    //   subject: "Your 2FA Login OTP",
-    //   html: `
-    //     <p>Login Verification</p>
-    //     <p>Your OTP for login is:</p>
-    //     <h2><strong>${otp}</strong></h2>
-    //     <p>This OTP will expire in 5 minutes.</p>
-    //   `,
-    // };
+    const htmlContent = `
+        <p>Login Verification</p>
+        <p>Your OTP for login is:</p>
+        <h2><strong>${otp}</strong></h2>
+        <p>This OTP will expire in 5 minutes.</p>
+      `;
 
-    // await transporter.sendMail(mailOption);
-
-    const emailResponse = await resend.emails.send({
-      from: process.env.SENDER_EMAIL,
-      to: [user.email],
-      subject: "Your 2FA Login OTP",
-      html: `
-            <p>Login Verification</p>
-            <p>Your OTP for login is:</p>
-            <h2><strong>${otp}</strong></h2>
-            <p>This OTP will expire in 5 minutes.</p>
-          `,
-    });
-
-    console.log("Email sent response:", emailResponse);
+    await sendMail(user.email, "Your 2FA Login OTP", htmlContent);
 
     return res.status(200).json({
       success: true,
@@ -275,33 +246,16 @@ export const forgetPassword = async (req, res, next) => {
 
     const resetLink = `${process.env.FRONTEND_URL}/reset-password?token=${resetToken}&userId=${userExists.id}`;
 
-    // const mailOptions = {
-    //   from: process.env.SENDER_EMAIL,
-    //   to: email,
-    //   subject: "Password Reset Request",
-    //   html: `
-    //     <h2>Password Reset</h2>
-    //     <p>Click the link below to verify your account:</p>
-    //     <a href="${resetLink}" style="padding:10px 15px;background:#4f46e5;color:#fff;   border-radius:4px;text-decoration:none;">
-    //   Verify Email
-    //     </a>
-    //     <p>This link will expire in 5 minutes.</p>
-    //   `,
-    // };
+    const htmlContent = `
+        <h2>Password Reset</h2>
+        <p>Click the link below to verify your account:</p>
+        <a href="${resetLink}" style="padding:10px 15px;background:#4f46e5;color:#fff;   border-radius:4px;text-decoration:none;">
+      Verify Email
+        </a>
+        <p>This link will expire in 5 minutes.</p>
+      `;
 
-    // await transporter.sendMail(mailOptions);
-
-    const response = await resend.emails.send({
-      from: 'StayEase <onboarding@resend.dev>',
-      to: [userExists.email],
-      subject: "Password Reset Request",
-      html: `
-            <h2>Password Reset</h2>
-            <p>Click the link below to verify your account:</p>
-            <a href="${resetLink}" style="padding:10px 15px;background:#4f46e5;color:#fff; border-radius:4px;text-decoration:none;">Verify Email</a>
-            <p>This link will expire in 5 minutes.</p>
-          `,
-    });
+    await sendMail(email, "Password Reset Request", htmlContent);
 
     return res.status(201).json({
       success: true,

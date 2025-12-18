@@ -42,6 +42,7 @@ const App = () => {
       <BrowserRouter>
         <Navbar />
         <Routes>
+          {/* Admin */}
           <Route
             path="/admin"
             element={
@@ -76,18 +77,22 @@ const App = () => {
             }
           />
 
+          {/* Public */}
           <Route path="/" element={<HomePage />} />
           <Route path="/cities/:city" element={<CityHotelsPage />} />
           <Route path="/hotel/:hotelId/rooms" element={<Rooms />} />
           <Route path="/room-detail/:roomId" element={<RoomDetail />} />
           <Route path="/my-bookings" element={<MyBooking />} />
           <Route path="/car-rental" element={<CarRental />} />
+
+          {/* Auth */}
           <Route path="/register" element={<Register />} />
           <Route path="/login" element={<Login />} />
           <Route path="/verify-login" element={<VerifyLogin />} />
           <Route path="/forget-password" element={<Forgetpassword />} />
           <Route path="/reset-password" element={<ResetPassword />} />
 
+          {/* payment */}
           <Route path="/payment-success" element={<PaymentSuccess />} />
           <Route path="/payment-failure" element={<PaymentFailure />} />
 

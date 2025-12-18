@@ -4,6 +4,8 @@ import axios from "axios";
 import { AuthContext } from "../context/AuthProvider";
 import { RoomContext } from "../context/RoomProvider";
 import toast from "react-hot-toast";
+import CheckCircleIcon from "@mui/icons-material/CheckCircle";
+import CloseIcon from "@mui/icons-material/Close";
 
 const RoomDetail = () => {
   const { roomId } = useParams();
@@ -55,7 +57,6 @@ const RoomDetail = () => {
     fetchRoom();
   }, [roomId]);
 
-  // Check availability whenever dates change (debounced in real app)
   useEffect(() => {
     if (!dates.checkIn || !dates.checkOut) {
       setIsAvailable(null);
@@ -66,7 +67,7 @@ const RoomDetail = () => {
       setCheckingAvailability(true);
       try {
         const res = await axios.get(
-          `https://stayease-yu78.onrender.com/api/v1/bookings/checkRoomAvailability/${roomId}`,
+          `http://localhost:8000/api/v1/bookings/checkRoomAvailability/${roomId}`,
           {
             params: { startDate: dates.checkIn, endDate: dates.checkOut },
             headers: {
@@ -84,6 +85,7 @@ const RoomDetail = () => {
     };
 
     const timeout = setTimeout(checkAvail, 500);
+
     return () => clearTimeout(timeout);
   }, [dates, roomId]);
 
@@ -105,7 +107,7 @@ const RoomDetail = () => {
     setBookingLoading(true);
     try {
       const res = await axios.post(
-        "https://stayease-yu78.onrender.com/api/v1/bookings/createBooking",
+        "http://localhost:8000/api/v1/bookings/createBooking",
         {
           roomId,
           hotelId: room.hotelId,
@@ -262,11 +264,11 @@ const RoomDetail = () => {
                 </div>
               ) : isAvailable === true ? (
                 <div className="text-sm text-green-600 font-medium">
-                  ✅ Available
+                  <CheckCircleIcon /> Available
                 </div>
               ) : isAvailable === false ? (
                 <div className="text-sm text-red-600 font-medium">
-                  ❌ Not available
+                  <CloseIcon /> Not available
                 </div>
               ) : (
                 <div className="text-sm text-gray-500">
@@ -288,13 +290,7 @@ const RoomDetail = () => {
                 </button>
               ) : (
                 <button
-                  onClick={() =>
-                    navigate(
-                      `/login?redirect=${encodeURIComponent(
-                        location.pathname + location.search
-                      )}`
-                    )
-                  }
+                  onClick={() => navigate("/login")}
                   className="px-6 py-2 bg-[#2f7003] text-white rounded-md font-medium hover:bg-[#255a02] transition"
                 >
                   Sign In to Book

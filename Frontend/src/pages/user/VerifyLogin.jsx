@@ -1,5 +1,5 @@
 import { useState, useRef, useContext } from "react";
-import { useNavigate } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { AuthContext } from "../../context/AuthProvider";
 
 const VerifyLogin = () => {
@@ -65,13 +65,10 @@ const VerifyLogin = () => {
 
             <div className="mt-4 text-center">
               <p className="text-gray-600 text-sm">
-                Didn't receive the code?{" "}
-                <a
-                  href="#"
-                  className="text-[#001BB7] hover:underline font-medium"
-                >
-                  Resend OTP
-                </a>
+                Didn't receive the code?
+                <p className="text-[#001BB7] hover:underline font-medium">
+                  <Link to={"/login"}>Resend OTP</Link>
+                </p>
               </p>
             </div>
           </form>

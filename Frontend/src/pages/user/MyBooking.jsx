@@ -56,7 +56,7 @@ const MyBooking = () => {
   const handleCancel = async (bookingId) => {
     try {
       const res = await axios.put(
-        `https://stayease-yu78.onrender.com/api/v1/bookings/cancelBooking/${bookingId}`,
+        `http://localhost:8000/api/v1/bookings/cancelBooking/${bookingId}`,
         {},
         {
           headers: {
@@ -93,7 +93,7 @@ const MyBooking = () => {
   const handlePay = async (bookingId) => {
     try {
       const res = await axios.post(
-        "https://stayease-yu78.onrender.com/api/v1/bookings/payment",
+        "http://localhost:8000/api/v1/bookings/payment",
         { bookingId },
         {
           headers: {

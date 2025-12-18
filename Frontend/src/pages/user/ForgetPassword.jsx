@@ -11,7 +11,7 @@ const Forgetpassword = () => {
     e.preventDefault();
     try {
       const res = await axios.post(
-        "https://stayease-yu78.onrender.com/api/v1/users/forgetPassword",
+        "http://localhost:8000/api/v1/users/forgetPassword",
         { email },
         {
           withCredentials: true,

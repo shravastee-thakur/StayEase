@@ -15,10 +15,9 @@ const AdminRooms = () => {
   const navigate = useNavigate();
 
   const [rooms, setRooms] = useState([]);
-  
 
   const [isModalOpen, setIsModalOpen] = useState(false);
-  const [currentRoom, setCurrentRoom] = useState(null); 
+  const [currentRoom, setCurrentRoom] = useState(null);
   const [formData, setFormData] = useState({
     type: "",
     description: "",
@@ -114,7 +113,7 @@ const AdminRooms = () => {
         console.log("currentRoom", currentRoom._id);
 
         await axios.put(
-          `https://stayease-yu78.onrender.com/api/v1/rooms/updateRoom/${currentRoom._id}`,
+          `http://localhost:8000/api/v1/rooms/updateRoom/${currentRoom._id}`,
           data,
           {
             headers: {
