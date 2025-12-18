@@ -48,7 +48,7 @@ const HotelProvider = ({ children }) => {
   const fetchHotels = async () => {
     try {
       const res = await axios.get(
-        "https://stay-ease-puce-one.vercel.app/api/v1/hotels/getHotels",
+        "http://localhost:8000/api/v1/hotels/getHotels",
         {
           headers: {
             "Content-Type": "application/json",

@@ -198,27 +198,17 @@ export const checkRoomAvailability = async (req, res, next) => {
       });
     }
 
-    const hasConflict = await Booking.findOne({
-      roomId,
-      status: { $in: ["pending", "confirmed"] },
-      $or: [
-        {
-          startDate: { $lt: new Date(endDate) },
-          endDate: { $gt: new Date(startDate) },
-        },
-      ],
-    })
-      .select("_id")
-      .limit(1)
-      .maxTimeMS(5000)
-      .lean();
-
-    const isAvailable = !hasConflict;
+    const isAvailable = overlappingBookings.length === 0;
 
     return res.status(200).json({
       success: true,
       data: {
         isAvailable,
+        conflictingBookings: overlappingBookings.map((booking) => ({
+          startDate: booking.startDate,
+          endDate: booking.endDate,
+          status: booking.status,
+        })),
       },
     });
   } catch (error) {

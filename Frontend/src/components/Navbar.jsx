@@ -31,7 +31,7 @@ const Navbar = () => {
             </Link>
           </div>
 
-          {/* Desktop Menu - Hidden on mobile */}
+          {/* Desktop Menu */}
           <div className="hidden md:flex gap-4 md:gap-6 lg:gap-10 items-center">
             {role === "admin" ? (
               <p className="hover:text-yellow-200 transition cursor-pointer text-white text-lg">
@@ -70,7 +70,6 @@ const Navbar = () => {
             )}
           </div>
 
-          {/* Hamburger Icon - Visible only on mobile */}
           <button
             className="md:hidden text-white focus:outline-none"
             onClick={() => setIsMenuOpen(!isMenuOpen)}
@@ -83,7 +82,7 @@ const Navbar = () => {
         </nav>
       </div>
 
-      {/* Mobile Menu - Slides in from the right */}
+      {/* Mobile Menu */}
       <div
         className={`md:hidden bg-[#44a206] z-50 px-4 pb-4 pt-2 mt-16 flex flex-col gap-3 fixed top-0 right-0 w-1/2 h-1/2 transform transition-transform ${
           isMenuOpen ? "translate-x-0" : "translate-x-full"
@@ -91,19 +90,31 @@ const Navbar = () => {
         style={{ transitionDuration: "300ms" }}
       >
         {role === "admin" ? (
-          <p className="cursor-pointer text-white text-base">
+          <p
+            onClick={() => setIsMenuOpen(false)}
+            className="cursor-pointer text-white text-base"
+          >
             <Link to={"/all-booking"}> All Bookings</Link>
           </p>
         ) : (
-          <p className="cursor-pointer text-white text-base">
+          <p
+            onClick={() => setIsMenuOpen(false)}
+            className="cursor-pointer text-white text-base"
+          >
             <Link to={"/my-bookings"}> My Bookings</Link>
           </p>
         )}
-        <p className="cursor-pointer text-white text-base">
+        <p
+          onClick={() => setIsMenuOpen(false)}
+          className="cursor-pointer text-white text-base"
+        >
           <Link to={"/car-rental"}>Car Rental</Link>
         </p>
         {verified && role === "admin" && (
-          <p className="cursor-pointer text-white text-base">
+          <p
+            onClick={() => setIsMenuOpen(false)}
+            className="cursor-pointer text-white text-base"
+          >
             <Link to={"/admin"}>Admin</Link>
           </p>
         )}
@@ -117,10 +128,16 @@ const Navbar = () => {
           </p>
         ) : (
           <>
-            <p className="cursor-pointer text-yellow-300 text-base">
+            <p
+              onClick={() => setIsMenuOpen(false)}
+              className="cursor-pointer text-yellow-300 text-base"
+            >
               <Link to={"/register"}>Register</Link>
             </p>
-            <p className="cursor-pointer text-yellow-300 text-base">
+            <p
+              onClick={() => setIsMenuOpen(false)}
+              className="cursor-pointer text-yellow-300 text-base"
+            >
               <Link to={"/login"}>Login</Link>
             </p>
           </>
