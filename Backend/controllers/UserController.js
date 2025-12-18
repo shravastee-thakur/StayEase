@@ -15,7 +15,13 @@ import {
   getResetToken,
   saveResetToken,
 } from "../utils/resetToken.js";
-import { sendOtpEmail, sendResetPasswordEmail } from "../config/sendMail.js";
+// import { sendOtpEmail, sendResetPasswordEmail } from "../config/sendMail.js";
+
+import { Resend } from "resend";
+import dotenv from "dotenv";
+dotenv.config();
+
+export const resend = new Resend(process.env.RESEND_API_KEY);
 
 export const register = async (req, res, next) => {
   try {
@@ -89,7 +95,19 @@ export const loginStepOne = async (req, res, next) => {
 
     // await transporter.sendMail(mailOption);
 
-    await sendOtpEmail(user.email, otp);
+    const emailResponse = await resend.emails.send({
+      from: process.env.SENDER_EMAIL,
+      to: user.email,
+      subject: "Your 2FA Login OTP",
+      html: `
+            <p>Login Verification</p>
+            <p>Your OTP for login is:</p>
+            <h2><strong>${otp}</strong></h2>
+            <p>This OTP will expire in 5 minutes.</p>
+          `,
+    });
+
+    console.log("Email sent response:", emailResponse);
 
     return res.status(200).json({
       success: true,
@@ -272,7 +290,17 @@ export const forgetPassword = async (req, res, next) => {
 
     // await transporter.sendMail(mailOptions);
 
-    await sendResetPasswordEmail(userExists.email, resetLink);
+    const response = await resend.emails.send({
+      from: process.env.SENDER_EMAIL,
+      to: userExists.email,
+      subject: "Password Reset Request",
+      html: `
+            <h2>Password Reset</h2>
+            <p>Click the link below to verify your account:</p>
+            <a href="${resetLink}" style="padding:10px 15px;background:#4f46e5;color:#fff; border-radius:4px;text-decoration:none;">Verify Email</a>
+            <p>This link will expire in 5 minutes.</p>
+          `,
+    });
 
     return res.status(201).json({
       success: true,
