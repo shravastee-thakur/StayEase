@@ -304,7 +304,7 @@ export const stripePayment = async (req, res, next) => {
     // await transporter.sendMail(mailOption);
 
     const emailResponse = await resend.emails.send({
-      from: process.env.SENDER_EMAIL,
+      from: "StayEase <onboarding@resend.dev>",
       to: booking.userId.email,
       subject: "Hotel Booking Details",
       html: `

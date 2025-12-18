@@ -22,6 +22,7 @@ import dotenv from "dotenv";
 dotenv.config();
 
 export const resend = new Resend(process.env.RESEND_API_KEY);
+console.log("SENDER_EMAIL:", process.env.SENDER_EMAIL);
 
 export const register = async (req, res, next) => {
   try {
@@ -96,8 +97,8 @@ export const loginStepOne = async (req, res, next) => {
     // await transporter.sendMail(mailOption);
 
     const emailResponse = await resend.emails.send({
-      from: process.env.SENDER_EMAIL,
-      to: user.email,
+      from: 'StayEase <onboarding@resend.dev>',
+      to: [user.email],
       subject: "Your 2FA Login OTP",
       html: `
             <p>Login Verification</p>
@@ -291,8 +292,8 @@ export const forgetPassword = async (req, res, next) => {
     // await transporter.sendMail(mailOptions);
 
     const response = await resend.emails.send({
-      from: process.env.SENDER_EMAIL,
-      to: userExists.email,
+      from: 'StayEase <onboarding@resend.dev>',
+      to: [userExists.email],
       subject: "Password Reset Request",
       html: `
             <h2>Password Reset</h2>
