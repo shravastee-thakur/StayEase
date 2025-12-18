@@ -1,6 +1,4 @@
 // import nodemailer from "nodemailer";
-import dotenv from "dotenv";
-dotenv.config();
 
 // const transporter = nodemailer.createTransport({
 //   host: "smtp.resend.com",
@@ -22,7 +20,10 @@ dotenv.config();
 // export default transporter;
 
 import { Resend } from "resend";
+import dotenv from "dotenv";
+dotenv.config();
 
+console.log("RESEND_API_KEY: ", process.env.RESEND_API_KEY);
 export const resend = new Resend(process.env.RESEND_API_KEY);
 
 export const sendOtpEmail = async (email, otp) => {
@@ -39,6 +40,7 @@ export const sendOtpEmail = async (email, otp) => {
       `,
     });
 
+    console.log("Email sent response:", emailResponse);
     return emailResponse;
   } catch (error) {
     console.error("Error sending email:", error);
@@ -65,5 +67,3 @@ export const sendResetPasswordEmail = async (email, resetLink) => {
     throw error;
   }
 };
-
-

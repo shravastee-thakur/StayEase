@@ -5,6 +5,8 @@ import logger from "../utils/logger.js";
 import sanitize from "mongo-sanitize";
 import { Stripe } from "stripe";
 // import transporter from "../config/sendMail.js";
+import dotenv from "dotenv";
+dotenv.config();
 import { Resend } from "resend";
 export const resend = new Resend(process.env.RESEND_API_KEY);
 
