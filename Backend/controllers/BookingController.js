@@ -4,7 +4,9 @@ import Room from "../models/RoomModel.js";
 import logger from "../utils/logger.js";
 import sanitize from "mongo-sanitize";
 import { Stripe } from "stripe";
-import transporter from "../config/sendMail.js";
+// import transporter from "../config/sendMail.js";
+import { Resend } from "resend";
+export const resend = new Resend(process.env.RESEND_API_KEY);
 
 const stripe = Stripe(process.env.STRIPE_SECRET_KEY);
 
@@ -276,28 +278,51 @@ export const stripePayment = async (req, res, next) => {
 
     await booking.updateOne({ status: "confirmed" });
 
-    const mailOption = {
+    // const mailOption = {
+    //   from: process.env.SENDER_EMAIL,
+    //   to: booking.userId.email,
+    //   subject: "Hotel Booking Details",
+    //   html: `
+    //         <h2>Booking Details</h2>
+    //         <p>Dear ${booking.userId.username},</p>
+    //         <p>Thankyou for availing our service.</p>
+    //         <ul>
+    //           <li><strong>Booking ID: </strong>${bookingId}</li>
+    //           <li><strong>Hotel Name: </strong>${booking.hotelId.name}</li>
+    //           <li><strong>Location: </strong>${booking.hotelId.city}</li>
+    //           <li><strong>Date: </strong>${booking.startDate.toLocaleDateString(
+    //             "en-GB"
+    //           )}</li>
+    //           <li><strong>Total Amount: </strong>₹ ${booking.totalAmount.toLocaleString()}</li>
+    //         </ul>
+    //         <p>We look forward to welcome you.</p>
+    //       `,
+    // };
+
+    // await transporter.sendMail(mailOption);
+
+    const emailResponse = await resend.emails.send({
       from: process.env.SENDER_EMAIL,
       to: booking.userId.email,
       subject: "Hotel Booking Details",
       html: `
-            <h2>Booking Details</h2>
-            <p>Dear ${booking.userId.username},</p>
-            <p>Thankyou for availing our service.</p>
-            <ul>
-              <li><strong>Booking ID: </strong>${bookingId}</li>
-              <li><strong>Hotel Name: </strong>${booking.hotelId.name}</li>
-              <li><strong>Location: </strong>${booking.hotelId.city}</li>
-              <li><strong>Date: </strong>${booking.startDate.toLocaleDateString(
-                "en-GB"
-              )}</li>
-              <li><strong>Total Amount: </strong>₹ ${booking.totalAmount.toLocaleString()}</li>
-            </ul>
-            <p>We look forward to welcome you.</p>
-          `,
-    };
+        <h2>Booking Details</h2>
+        <p>Dear ${booking.userId.username},</p>
+        <p>Thank you for availing our service.</p>
+        <ul>
+          <li><strong>Booking ID: </strong>${bookingId}</li>
+          <li><strong>Hotel Name: </strong>${booking.hotelId.name}</li>
+          <li><strong>Location: </strong>${booking.hotelId.city}</li>
+          <li><strong>Date: </strong>${booking.startDate.toLocaleDateString(
+            "en-GB"
+          )}</li>
+          <li><strong>Total Amount: </strong>₹ ${booking.totalAmount.toLocaleString()}</li>
+        </ul>
+        <p>We look forward to welcoming you.</p>
+      `,
+    });
 
-    await transporter.sendMail(mailOption);
+    console.log("Email sent successfully:", emailResponse);
 
     res.json({ success: true, url: session.url });
   } catch (error) {

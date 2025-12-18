@@ -15,7 +15,7 @@ import {
   getResetToken,
   saveResetToken,
 } from "../utils/resetToken.js";
-import { sendOtpEmail } from "../config/sendMail.js";
+import { sendOtpEmail, sendResetPasswordEmail } from "../config/sendMail.js";
 
 export const register = async (req, res, next) => {
   try {
@@ -87,9 +87,7 @@ export const loginStepOne = async (req, res, next) => {
 
     // await transporter.sendMail(mailOption);
 
-
-     await sendOtpEmail(user.email, otp);
-
+    await sendOtpEmail(user.email, otp);
 
     return res.status(200).json({
       success: true,
@@ -256,21 +254,23 @@ export const forgetPassword = async (req, res, next) => {
 
     const resetLink = `${process.env.FRONTEND_URL}/reset-password?token=${resetToken}&userId=${userExists.id}`;
 
-    const mailOptions = {
-      from: process.env.SENDER_EMAIL,
-      to: email,
-      subject: "Password Reset Request",
-      html: `
-        <h2>Password Reset</h2>
-        <p>Click the link below to verify your account:</p>
-        <a href="${resetLink}" style="padding:10px 15px;background:#4f46e5;color:#fff;   border-radius:4px;text-decoration:none;">
-      Verify Email
-        </a>
-        <p>This link will expire in 5 minutes.</p>
-      `,
-    };
+    // const mailOptions = {
+    //   from: process.env.SENDER_EMAIL,
+    //   to: email,
+    //   subject: "Password Reset Request",
+    //   html: `
+    //     <h2>Password Reset</h2>
+    //     <p>Click the link below to verify your account:</p>
+    //     <a href="${resetLink}" style="padding:10px 15px;background:#4f46e5;color:#fff;   border-radius:4px;text-decoration:none;">
+    //   Verify Email
+    //     </a>
+    //     <p>This link will expire in 5 minutes.</p>
+    //   `,
+    // };
 
-    await transporter.sendMail(mailOptions);
+    // await transporter.sendMail(mailOptions);
+
+    await sendResetPasswordEmail(userExists.email, resetLink);
 
     return res.status(201).json({
       success: true,
