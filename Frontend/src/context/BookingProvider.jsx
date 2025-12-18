@@ -10,7 +10,7 @@ const BookingProvider = ({ children }) => {
   const createBooking = async (data) => {
     try {
       const res = await axios.post(
-        "https://stay-ease-puce-one.vercel.app/api/v1/bookings/createBooking",
+        "https://stayease-yu78.onrender.com/api/v1/bookings/createBooking",
         data,
         {
           headers: {

@@ -11,7 +11,7 @@ const Forgetpassword = () => {
     e.preventDefault();
     try {
       const res = await axios.post(
-        "https://stay-ease-puce-one.vercel.app/api/v1/users/forgetPassword",
+        "https://stayease-yu78.onrender.com/api/v1/users/forgetPassword",
         { email },
         {
           withCredentials: true,

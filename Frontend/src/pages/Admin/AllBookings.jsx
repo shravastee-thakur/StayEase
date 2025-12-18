@@ -24,7 +24,7 @@ const MyBooking = () => {
     const getMyBooking = async () => {
       try {
         const res = await axios.get(
-          "https://stay-ease-puce-one.vercel.app/api/v1/bookings/getAllBookings",
+          "https://stayease-yu78.onrender.com/api/v1/bookings/getAllBookings",
           {
             headers: {
               Authorization: `Bearer ${accessToken}`,
@@ -58,7 +58,7 @@ const MyBooking = () => {
 
     try {
       const res = await axios.delete(
-        `https://stay-ease-puce-one.vercel.app/api/v1/bookings/deleteBooking/${bookingId}`,
+        `https://stayease-yu78.onrender.com/api/v1/bookings/deleteBooking/${bookingId}`,
         {
           headers: {
             Authorization: `Bearer ${accessToken}`,

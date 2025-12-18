@@ -22,7 +22,7 @@ const ResetPassword = () => {
     setIsSubmitting(true);
     try {
       const res = await axios.post(
-        "https://stay-ease-puce-one.vercel.app/api/v1/users/resetPassword",
+        "https://stayease-yu78.onrender.com/api/v1/users/resetPassword",
         { userId, token, newPassword },
         {
           withCredentials: true,

@@ -15,10 +15,10 @@ const AdminRooms = () => {
   const navigate = useNavigate();
 
   const [rooms, setRooms] = useState([]);
-  // console.log();
+  
 
   const [isModalOpen, setIsModalOpen] = useState(false);
-  const [currentRoom, setCurrentRoom] = useState(null); // null = create, object = edit
+  const [currentRoom, setCurrentRoom] = useState(null); 
   const [formData, setFormData] = useState({
     type: "",
     description: "",
@@ -114,7 +114,7 @@ const AdminRooms = () => {
         console.log("currentRoom", currentRoom._id);
 
         await axios.put(
-          `https://stay-ease-puce-one.vercel.app/api/v1/rooms/updateRoom/${currentRoom._id}`,
+          `https://stayease-yu78.onrender.com/api/v1/rooms/updateRoom/${currentRoom._id}`,
           data,
           {
             headers: {

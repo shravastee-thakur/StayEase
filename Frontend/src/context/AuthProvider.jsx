@@ -15,7 +15,7 @@ const AuthProvider = ({ children }) => {
     const refreshTokenHandler = async () => {
       try {
         const res = await axios.post(
-          "https://stay-ease-puce-one.vercel.app/api/v1/users/refreshHandler",
+          "https://stayease-yu78.onrender.com/api/v1/users/refreshHandler",
           {},
           {
             withCredentials: true,
@@ -43,7 +43,7 @@ const AuthProvider = ({ children }) => {
   const loginStepOne = async (formData) => {
     try {
       const res = await axios.post(
-        "https://stay-ease-puce-one.vercel.app/api/v1/users/loginStepOne",
+        "https://stayease-yu78.onrender.com/api/v1/users/loginStepOne",
         formData,
         {
           headers: {
@@ -80,7 +80,7 @@ const AuthProvider = ({ children }) => {
   const verifyLoginOtp = async (otp) => {
     try {
       const res = await axios.post(
-        "https://stay-ease-puce-one.vercel.app/api/v1/users/verifyOtp",
+        "https://stayease-yu78.onrender.com/api/v1/users/verifyOtp",
         { userId, otp },
         {
           headers: {
@@ -120,7 +120,7 @@ const AuthProvider = ({ children }) => {
     if (!accessToken) return;
     try {
       const res = await axios.post(
-        "https://stay-ease-puce-one.vercel.app/api/v1/users/logout",
+        "https://stayease-yu78.onrender.com/api/v1/users/logout",
         {},
         {
           headers: {

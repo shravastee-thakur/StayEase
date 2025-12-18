@@ -109,7 +109,7 @@ const AdminHotels = () => {
     try {
       if (currentHotel) {
         await axios.put(
-          `https://stay-ease-puce-one.vercel.app/api/v1/hotels/updateHotel/${currentHotel._id}`,
+          `https://stayease-yu78.onrender.com/api/v1/hotels/updateHotel/${currentHotel._id}`,
           data,
           {
             headers: {

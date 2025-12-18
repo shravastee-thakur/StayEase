@@ -12,7 +12,7 @@ const RoomProvider = ({ children }) => {
   const createRoom = async (formdata) => {
     try {
       const res = await axios.post(
-        "https://stay-ease-puce-one.vercel.app/api/v1/rooms/createRoom",
+        "https://stayease-yu78.onrender.com/api/v1/rooms/createRoom",
         formdata,
         {
           headers: {
@@ -49,7 +49,7 @@ const RoomProvider = ({ children }) => {
   const fetchRooms = async (hotelId) => {
     try {
       const res = await axios.get(
-        `https://stay-ease-puce-one.vercel.app/api/v1/hotels/getHotelRooms/${hotelId}/rooms`,
+        `https://stayease-yu78.onrender.com/api/v1/hotels/getHotelRooms/${hotelId}/rooms`,
         {
           headers: {
             "Content-Type": "application/json",
@@ -69,7 +69,7 @@ const RoomProvider = ({ children }) => {
   const getRoomById = async (roomId) => {
     try {
       const res = await axios.get(
-        `https://stay-ease-puce-one.vercel.app/api/v1/rooms/getRoomById/${roomId}`,
+        `https://stayease-yu78.onrender.com/api/v1/rooms/getRoomById/${roomId}`,
         {
           headers: {
             "Content-Type": "application/json",
@@ -89,7 +89,7 @@ const RoomProvider = ({ children }) => {
   const deleteRoom = async (id) => {
     try {
       const res = await axios.delete(
-        `https://stay-ease-puce-one.vercel.app/api/v1/rooms/deleteRoom/${id}`,
+        `https://stayease-yu78.onrender.com/api/v1/rooms/deleteRoom/${id}`,
         {
           headers: {
             Authorization: `Bearer ${accessToken}`,

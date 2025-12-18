@@ -66,7 +66,7 @@ const RoomDetail = () => {
       setCheckingAvailability(true);
       try {
         const res = await axios.get(
-          `https://stay-ease-puce-one.vercel.app/api/v1/bookings/checkRoomAvailability/${roomId}`,
+          `https://stayease-yu78.onrender.com/api/v1/bookings/checkRoomAvailability/${roomId}`,
           {
             params: { startDate: dates.checkIn, endDate: dates.checkOut },
             headers: {
@@ -105,7 +105,7 @@ const RoomDetail = () => {
     setBookingLoading(true);
     try {
       const res = await axios.post(
-        "https://stay-ease-puce-one.vercel.app/api/v1/bookings/createBooking",
+        "https://stayease-yu78.onrender.com/api/v1/bookings/createBooking",
         {
           roomId,
           hotelId: room.hotelId,

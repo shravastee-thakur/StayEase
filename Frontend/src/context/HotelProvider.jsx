@@ -11,7 +11,7 @@ const HotelProvider = ({ children }) => {
   const createHotel = async (formData) => {
     try {
       const res = await axios.post(
-        "https://stay-ease-puce-one.vercel.app/api/v1/hotels/createHotel",
+        "https://stayease-yu78.onrender.com/api/v1/hotels/createHotel",
         formData,
         {
           headers: {
@@ -48,7 +48,7 @@ const HotelProvider = ({ children }) => {
   const fetchHotels = async () => {
     try {
       const res = await axios.get(
-        "http://localhost:8000/api/v1/hotels/getHotels",
+        "https://stayease-yu78.onrender.com/api/v1/hotels/getHotels",
         {
           headers: {
             "Content-Type": "application/json",
@@ -69,7 +69,7 @@ const HotelProvider = ({ children }) => {
   const fetchHotelById = async (id) => {
     try {
       const res = await axios.get(
-        `https://stay-ease-puce-one.vercel.app/api/v1/hotels/getHotelById/${id}`,
+        `https://stayease-yu78.onrender.com/api/v1/hotels/getHotelById/${id}`,
         {
           headers: {
             "Content-Type": "application/json",
