@@ -11,3 +11,4 @@ export const getOtp = async (email) => {
 export const deleteOtp = async (email) => {
   return await redis.del(`otp:${email}`);
 };
+

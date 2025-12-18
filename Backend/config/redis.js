@@ -6,3 +6,11 @@ export const redis = new Redis({
   url: process.env.UPSTASH_REDIS_REST_URL,
   token: process.env.UPSTASH_REDIS_REST_TOKEN,
 });
+
+redis.on("connect", () => {
+  console.log("Redis is connected");
+});
+
+redis.on("error", (err) => {
+  console.error("Redis connection error:", err);
+});

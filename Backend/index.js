@@ -14,6 +14,7 @@ import userRoute from "./routes/UserRoutes.js";
 import hotelRoute from "./routes/HotelRoutes.js";
 import roomRoute from "./routes/RoomRoutes.js";
 import bookingRoute from "./routes/BookingRoute.js";
+import { redis } from "./config/redis.js";
 
 const app = express();
 connectdb();
@@ -35,6 +36,30 @@ app.use(
     crossOriginResourcePolicy: { policy: "cross-origin" },
   })
 );
+
+// Add to your main routes
+app.get("/api/test", (req, res) => {
+  res.json({
+    message: "API is working",
+    timestamp: new Date().toISOString(),
+    environment: process.env.NODE_ENV,
+  });
+});
+
+app.post("/api/test-otp", async (req, res) => {
+  const { email } = req.body;
+  const otp = "123456";
+
+  await redis.set(`test:otp:${email}`, otp, "EX", 300);
+
+  res.json({
+    success: true,
+    message: "OTP stored in Redis",
+    email,
+    otp,
+    redis: "working",
+  });
+});
 
 // Routes
 app.use("/api/v1/users", userRoute);
