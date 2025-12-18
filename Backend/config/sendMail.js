@@ -1,11 +1,12 @@
 // import nodemailer from "nodemailer";
 
 // const transporter = nodemailer.createTransport({
-//   host: "smtp.resend.com",
-//   port: 465,
+//   host: "smtp.ethereal.email",
+//   port: 587,
+//   secure: false,
 //   auth: {
 //     user: process.env.SMTP_USER,
-//     pass: process.env.RESEND_API_KEY,
+//     pass: "jn7jnAPss4f63QBp6D",
 //   },
 // });
 
@@ -19,11 +20,11 @@
 
 // export default transporter;
 
-import { Resend } from "resend";
-import dotenv from "dotenv";
-dotenv.config();
+// import { Resend } from "resend";
+// import dotenv from "dotenv";
+// dotenv.config();
 
-export const resend = new Resend(process.env.RESEND_API_KEY);
+// export const resend = new Resend(process.env.RESEND_API_KEY);
 
 // export const sendOtpEmail = async (email, otp) => {
 //   try {

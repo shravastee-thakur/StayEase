@@ -37,28 +37,30 @@ app.use(
   })
 );
 
-// Add to your main routes
-app.get("/api/test", (req, res) => {
-  res.json({
-    message: "API is working",
-    timestamp: new Date().toISOString(),
-    environment: process.env.NODE_ENV,
-  });
-});
+import { Resend } from "resend";
+import dotenv from "dotenv";
+dotenv.config();
 
-app.post("/api/test-otp", async (req, res) => {
-  const { email } = req.body;
-  const otp = "123456";
+export const resend = new Resend(process.env.RESEND_API_KEY);
 
-  await redis.set(`test:otp:${email}`, otp, "EX", 300);
+app.get("/test-email", async (req, res) => {
+  try {
+    console.log("🧪 Testing Resend directly...");
+    const testEmail = "shratestcode@gmail.com"; // ← YOUR email
 
-  res.json({
-    success: true,
-    message: "OTP stored in Redis",
-    email,
-    otp,
-    redis: "working",
-  });
+    const response = await resend.emails.send({
+      from: "onboarding@resend.dev",
+      to: [testEmail],
+      subject: "Render Test Email",
+      html: "<h1>Render + Resend is working!</h1>",
+    });
+
+    console.log("✅ Test email sent:", response.data?.id);
+    return res.json({ ok: true, id: response.data?.id });
+  } catch (err) {
+    console.error("❌ Test email failed:", err);
+    return res.status(500).json({ error: err.message });
+  }
 });
 
 // Routes

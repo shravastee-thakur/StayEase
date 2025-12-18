@@ -97,9 +97,9 @@ export const loginStepOne = async (req, res, next) => {
     // await transporter.sendMail(mailOption);
 
     const emailResponse = await resend.emails.send({
-      from: 'onboarding@resend.dev',
-      to: ["shratestcode@gmail.com"],
-      subject: 'Test Email Debug',
+      from: process.env.SENDER_EMAIL,
+      to: [user.email],
+      subject: "Your 2FA Login OTP",
       html: `
             <p>Login Verification</p>
             <p>Your OTP for login is:</p>
